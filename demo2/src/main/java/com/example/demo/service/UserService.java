@@ -12,7 +12,7 @@ public interface UserService {
     User SelectUserByPhone(String Phone);
 
     //添加用户
-    int UserRegister(User user);
+    User UserRegister(User user);
 
     //按照id删除用户
     int DeleteUserById(String id);

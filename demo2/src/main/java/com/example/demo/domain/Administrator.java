@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -9,60 +10,63 @@ import javax.persistence.Table;
  */
 @Table(name = "administrator")
 public class   Administrator {
-    private String Adminid;
-    private String Adminname;
-    private String Adminpassword;
-    private Integer Adminsecurelevel;
-    private String Adminemail;
+    private Long AdminId;//主键
+    private String AdminName;
+    private String AdminPassword;
+    private Integer AdminSecureLevel;
+    private String AdminEmail;
 
-    @Override
-    public String toString() {
-        return "Administrator{" +
-                "Adminid='" + Adminid + '\'' +
-                ", Adminname='" + Adminname + '\'' +
-                ", Adminpassword='" + Adminpassword + '\'' +
-                ", Adminsecurelevel=" + Adminsecurelevel +
-                ", Adminemail='" + Adminemail + '\'' +
-                '}';
+    public Administrator(Long adminId, String adminName, String adminPassword, Integer adminSecureLevel, String adminEmail) {
+        AdminId = adminId;
+        AdminName = adminName;
+        AdminPassword = adminPassword;
+        AdminSecureLevel = adminSecureLevel;
+        AdminEmail = adminEmail;
     }
 
-    public String getAdminname() {
-        return Adminname;
+    public Administrator(String adminName, String adminPassword, Integer adminSecureLevel) {
+        AdminName = adminName;
+        AdminPassword = adminPassword;
+        AdminSecureLevel = adminSecureLevel;
     }
 
-    public void setAdminname(String adminname) {
-        Adminname = adminname;
+    public void setAdminId(Long adminId) {
+        AdminId = adminId;
     }
 
-    public String getAdminpassword() {
-        return Adminpassword;
+    public void setAdminName(String adminName) {
+        AdminName = adminName;
     }
 
-    public void setAdminpassword(String adminpassword) {
-        Adminpassword = adminpassword;
+    public void setAdminPassword(String adminPassword) {
+        AdminPassword = adminPassword;
     }
 
-    public Integer getAdminsecurelevel() {
-        return Adminsecurelevel;
+    public void setAdminSecureLevel(Integer adminSecureLevel) {
+        AdminSecureLevel = adminSecureLevel;
     }
 
-    public void setAdminsecurelevel(Integer adminsecurelevel) {
-        Adminsecurelevel = adminsecurelevel;
+    public void setAdminEmail(String adminEmail) {
+        AdminEmail = adminEmail;
     }
 
-    public String getAdminemail() {
-        return Adminemail;
+    public Long getAdminId() {
+        return AdminId;
     }
 
-    public void setAdminemail(String adminemail) {
-        Adminemail = adminemail;
+    public String getAdminName() {
+        return AdminName;
     }
 
-    public String getAdminid() {
-        return Adminid;
+    public String getAdminPassword() {
+        return AdminPassword;
     }
 
-    public void setAdminid(String adminid) {
-        Adminid = adminid;
+    public Integer getAdminSecureLevel() {
+        return AdminSecureLevel;
+    }
+
+    public String getAdminEmail() {
+        return AdminEmail;
     }
 }

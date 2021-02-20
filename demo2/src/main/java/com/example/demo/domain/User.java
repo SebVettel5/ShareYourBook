@@ -40,6 +40,18 @@ public class User {
         UserCareer = userCareer;
         UserOrg = userOrg;
     }
+    
+    /**
+    * @Description: 使用userphone和userpassword两个属性的构造方法，适用于用户初次注册场景
+    * @Param: [userPhone, userPassword]
+    * @return:
+    * @Author: chenjiajun
+    * @Date: 2021/2/19
+    */
+    public User(String userPhone, String userPassword) {
+        UserPhone = userPhone;
+        UserPassword = userPassword;
+    }
 
     @Override
     public String toString() {

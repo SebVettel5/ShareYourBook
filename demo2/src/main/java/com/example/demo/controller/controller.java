@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.Administrator;
+import com.example.demo.domain.Organization;
 import com.example.demo.domain.User;
-import com.example.demo.service.AdministratorService;
+import com.example.demo.service.Impl.AdministratorServiceImpl;
+import com.example.demo.service.Impl.OrganizationServiceImpl;
 import com.example.demo.service.Impl.UserServiceImpl;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,68 +17,62 @@ import java.util.List;
 @MapperScan("com.example.demo.mapper.UserMapper")
 @RestController
 public class controller {
+        //----------以下为变量声明----------
         //Spring自动封装bean
-//        @Autowired
-//        @Autowired
+        //user服务实现类
         @Autowired
         private UserServiceImpl userServiceImpl ;
-
+        //Administrator服务实现类
         @Autowired
-        private AdministratorService administratorService;
+        private AdministratorServiceImpl administratorServiceImpl;
+        //OrganizationServiceImpl服务实现类
+        @Autowired
+        private OrganizationServiceImpl organizationServiceImpl;
 
-        //以下为对User表进行操作
 
-        //1.查找所有用户数据
+        //-----------以下为对User表进行操作------------------
+        
+        /**
+        * @Description: 查找所有用户信息
+        * @Param: []
+        * @return: java.util.List<com.example.demo.domain.User>
+        * @Author: chenjiajun
+        * @Date: 2021/2/19
+        */
         @RequestMapping("/SelectAllUser")
         @ResponseBody//返回类型为json
-        public List<User> SelectAll(){
-            List<User> list = userServiceImpl.SelectAllUser();
-            return list;
+        public List<User> SelectAll() {
+            return userServiceImpl.SelectAllUser();
         }
-
-        //2.按UserPhone查找用户
-        @RequestMapping("/SelectUserByPhone")
-        @ResponseBody
-        public User LoginCheck(){
-            String id = "13789083230";
-            User u = userServiceImpl.SelectUserByPhone(id);
-            return u;
-        }
-
-        //3.用户注册
-        @RequestMapping("/InsertUser")
-        @ResponseBody
-        public int InsertUser(){
-            User u = new User();
-            u.setUserName("tom");
-            u.setUserPhone("13712345679");
-            u.setUserPassword("123456");
-            int res = userServiceImpl.UserRegister(u);
-            return res;
-        }
-
-
-        //4.按id删除用户
+        
+        /**
+        * @Description: 按照id删除
+        * @Param: []
+        * @return: int
+        * @Author: chenjiajun
+        * @Date: 2021/2/19
+        */
         @RequestMapping("/DeleteUserById")
         @ResponseBody
-        public int DeleteUserById(){
-            int res = userServiceImpl.DeleteUserById("1000025");
-            return res;
+        public int DeleteUserById(String id){
+            return userServiceImpl.DeleteUserById(id);
         }
 
-        //5.按id修改用户
+        /**
+        * @Description: 更新user信息
+        * @Param: [u]
+        * @return: int
+        * @Author: chenjiajun
+        * @Date: 2021/2/19
+        */
         @RequestMapping("/UpdateUserById")
         @ResponseBody
-        public  int UpdateUserById(){
-            User u = new User();
-            u.setUserId("1000024");
-            u.setUserName("王二");
+        public  int UpdateUserById(User u){
             return  userServiceImpl.UpdateUserInformation(u);
         }
 
         /**
-        * @Description: 用户使用账号密码登录，登录成功返回一个包装好了的用户对象，否则返回一个
-         *              空对象，前端拒绝登录
+        * @Description: 用户使用账号密码登录
         * @Param: [account, password]
         * @return: com.example.demo.domain.User
         * @Author: chenjiajun
@@ -85,32 +81,119 @@ public class controller {
         @RequestMapping("/UserLogin")
         @ResponseBody
         public User UserLogin(String account,String password){
-//            System.out.println(account+" "+password);
-            User u = userServiceImpl.UserLogin(account,password);
-//            System.out.println("result is :"+userServiceImpl.UserLogin(account,password).toString());
-            return u;
+            return userServiceImpl.UserLogin(account,password);
         }
 
-
-
-
-
-
-
-        //测试框架访问
-        @RequestMapping("/1111")
+        /**
+        * @Description: 用户初次注册时，通过手机号和密码直接注册
+        * @Param: [userphone, userpassword]
+        * @return: com.example.demo.domain.User
+        * @Author: chenjiajun
+        * @Date: 2021/2/19
+        */
+        @RequestMapping("/UserRegister")
         @ResponseBody
-        public String Hello(){
-            return "hello";
+        public User UserRegister(String userphone,String userpassword){
+            User u = new User(userphone,userpassword);
+            return  userServiceImpl.UserRegister(u);
         }
 
 
-        //以下为对Administrator表进行操作
+
+
+
+        //----------以下为对Administrator表进行操作----------------
+
+        /**
+        * @Description: 查询所有管理员信息，返回List表
+        * @Param: []
+        * @return: java.util.List<com.example.demo.domain.Administrator>
+        * @Author: chenjiajun
+        * @Date: 2021/2/19
+        */
         @RequestMapping("/SelectAllAdmin")
         @ResponseBody
         public List<Administrator> showAll(){
-            List<Administrator> list = administratorService.SellectAll();
-            return list;
+            return administratorServiceImpl.SelectAll();
         }
 
+        /**
+         * @Description: 管理员使用账号密码登录
+         * @Param: [account, password]
+         * @return: com.example.demo.domain.Administrator
+         * @Author: chenjiajun
+         * @Date: 2021/2/19
+         */
+        @RequestMapping("/AdministratorLogin")
+        @ResponseBody
+        public  Administrator AdminLogin(String account,String password){
+            return administratorServiceImpl.AdminLogin(account,password);
+        }
+        
+        /**
+        * @Description: 向administrator表中添加管理员，并返回含有默认信息的管理员对象
+        * @Param: [adminName, adminSecureLevel, adminPassword]
+        * @return: com.example.demo.domain.Administrator
+        * @Author: chenjiajun
+        * @Date: 2021/2/19
+        */
+        @RequestMapping("/AdministratorRegister")
+        @ResponseBody
+        public Administrator AdminRegister(Administrator operator,String adminName,String adminSecureLevel,String adminPassword){
+//            System.out.println(adminName);
+            return administratorServiceImpl.AdminRegister(operator,adminName,Integer.valueOf(adminSecureLevel),adminPassword);
+        }
+
+        /**
+        * @Description: 删除管理员用户
+        * @Param: [operator, target]
+        * @return: java.lang.String
+        * @Author: chenjiajun
+        * @Date: 2021/2/20
+        */
+        @RequestMapping("/DeleteAdministrator")
+        @ResponseBody
+        public String DeleteAdministrator(Administrator operator,Administrator target){
+            return administratorServiceImpl.DeleteAdministrator(operator,target);
+        }
+
+        /**
+        * @Description: 修改管理员信息
+        * @Param: [administrator]
+        * @return: int
+        * @Author: chenjiajun
+        * @Date: 2021/2/20
+        */
+        @RequestMapping("/UpdateAdministrator")
+        @ResponseBody
+        public String UpdateAdministrator(Administrator operator,Administrator target){
+            return administratorServiceImpl.UpdateAdministrator(operator,target);
+        }
+
+
+        //-----------以下为对organization表进行操作
+
+        @RequestMapping("/SelectAllOrganization")
+        @ResponseBody
+        public List<Organization> SelectAllOrganization(){
+            return organizationServiceImpl.SelectAllOrganization();
+        }
+
+
+
+
+
+        //------------框架测试--------
+    /**
+     * @Description: 测试框架启动
+     * @Param: []
+     * @return: java.lang.String
+     * @Author: chenjiajun
+     * @Date: 2021/2/19
+     */
+    @RequestMapping("/1111")
+    @ResponseBody
+    public String Hello(){
+        return "hello";
+    }
 }

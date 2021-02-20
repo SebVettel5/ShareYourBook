@@ -37,8 +37,11 @@ public class UserServiceImpl implements UserService {
 
     //添加用户
     @Override
-    public int UserRegister(User user) {
-        return userMapper.NewUserRegister(user);
+    public User UserRegister(User user) {
+        int res = userMapper.NewUserRegister(user);
+        if(res == 0)System.out.println("插入失败！");
+        //新建用户后，重新再从表中查询到这个用户，返回初始设定的用户信息
+        return SelectUserByPhone(user.getUserPhone());
     }
 
     //按id删除用户
@@ -59,7 +62,9 @@ public class UserServiceImpl implements UserService {
     //登录并返回用户对象
     @Override
     public User UserLogin(String account, String password) {
-        return userMapper.Login(account,password);
+        User u = userMapper.Login(account,password);
+        if(u == null)System.out.println("空对象，登录错误");
+        return u;
     }
 
 
