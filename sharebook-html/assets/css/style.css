@@ -135,9 +135,13 @@ table {
 }
 
 /*--start editing from here--*/
+#passdiv{
+	display: none;
+}
+
 
 .group-cpass{
-	display: none;
+	display: block;
 }
 
 a {
