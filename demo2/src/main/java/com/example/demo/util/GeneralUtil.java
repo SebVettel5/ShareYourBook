@@ -19,4 +19,8 @@ public class GeneralUtil {
     public boolean CheckAdminSecureLevel(Administrator operator,Administrator target){
         return operator.getAdminSecureLevel() > target.getAdminSecureLevel();
     }
+
+    public String GetCode(){
+        return "11111";
+    }
 }

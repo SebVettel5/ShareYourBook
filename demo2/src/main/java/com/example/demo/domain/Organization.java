@@ -18,6 +18,7 @@ public class Organization {
     private String OrganizationHeadPic;//头像路径
     private Integer OrganizationLevel;
 
+    //全参构造函数
     public Organization(String organizationId, String organizationName, String organizationPassword, String organizationEmail, String organizationHeadPic, Integer organizationLevel) {
         OrganizationId = organizationId;
         OrganizationName = organizationName;
@@ -25,6 +26,14 @@ public class Organization {
         OrganizationEmail = organizationEmail;
         OrganizationHeadPic = organizationHeadPic;
         OrganizationLevel = organizationLevel;
+    }
+
+    //除id,等级外的构造函数，用于添加的时候临时构建对象
+    public Organization(String organizationName, String organizationPassword, String organizationEmail, String organizationHeadPic) {
+        OrganizationName = organizationName;
+        OrganizationPassword = organizationPassword;
+        OrganizationEmail = organizationEmail;
+        OrganizationHeadPic = organizationHeadPic;
     }
 
     public String getOrganizationId() {

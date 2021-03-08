@@ -18,6 +18,8 @@
 				var paw = document.getElementById("pass");
 				//获取验证码输入框
 				var checkinput = document.getElementById("pass1");
+                //获取登录表单
+                var loginform = document.getElementById("loginform");
 				/*
 				 点击登录按钮的函数
 				 * */
@@ -29,6 +31,9 @@
 						switch(context.length){
 							case 11:alert("读者");break;
 							case 7:alert("机构-----我们将向您的密保邮箱发送一封验证码，注意查收");
+							        var code = "<%=GetCode%>";
+							        alert(code);
+                                    loginform.action="/AdministratorLogin";
 									checkinputdiv.style.display ="block";
 									checkinput.required="required";
 									break;
@@ -41,7 +46,22 @@
 					}
 				}
 				
-				
+				document.getElementById("1").onclick = function(){
+				    var code = "21t" ;
+				    alert("test");
+                   $.ajax({
+                       url:"/SelectAllUser",
+                       type:"GET",
+                       datatype:"text",
+                       error:function(){
+                           alert("error")
+                       },
+                       success:function () {
+                           code = this;
+                           alert(this.type);
+                       }
+                   });
+                }
 				
 			}
 		</script>
@@ -79,7 +99,7 @@
 							</nav>
 					</div>
 				</section>
-
+            <button id="1" type="button">test</button>
 			<!-- 主要内容部分 -->
 				<section id="main" >
 					<section class="login-wrap">
@@ -89,9 +109,10 @@
             <input id="tab-2" type="radio" name="tab" class="sign-up">
             <label for="tab-2" class="tab">注    册</label>
             <div class="login-form">
+
                 <!-- signin form -->
                 <div class="signin_wthree">
-                    <form method="post" action="/UserLogin">
+                    <form id="loginform" method="post" action="/UserLogin">
                         <div class="group">
                             <label for="user" class="label">用户名</label>
                             <input id="user" type="text" class="input" required="required" name="account">
@@ -102,7 +123,8 @@
                         </div>
                         <div class="group" id="passdiv" >
                             <label for="pass" class="label">验证码</label>
-                            <input id="pass1" type="password" class="input" data-type="password" >
+                            <input id="pass1" type="text" class="input" data-type="password" required="required" name="checkpassword">
+                            <a >重新获取密码</a>
                         </div>
                         <div class="group">
                             <input id="check" type="checkbox" class="check" checked>
@@ -111,6 +133,7 @@
                         </div>
                         <div class="group">
                             <input type="submit" class="button" value="登录" id="lgbt">
+
                         </div>
                         <div class="hr"></div>
                         <div class="foot-lnk">
