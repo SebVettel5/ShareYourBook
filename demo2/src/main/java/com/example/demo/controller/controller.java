@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.exception.NotFindException;
 import com.example.demo.util.GeneralUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Controller;
@@ -46,7 +47,9 @@ public class controller {
      @RequestMapping("/test404")
     public String TestError()
      {
-//         int a = 10/0;
+         int a = 10/0;
+//         String blog = null;
+//         if(blog == null)throw new NotFindException("dee");
          return "homepage";
      }
 

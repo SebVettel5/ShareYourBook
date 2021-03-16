@@ -6,6 +6,7 @@ import com.example.demo.mapper.OrganizationMapper;
 import com.example.demo.service.OrganizationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -36,15 +37,26 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     /**
-    * @Description: 通过用户名和账号登录，返回查询到的组织对象
+    * @Description: 通过用户名和账号登录，返回查询到的组织对象,跳转到信息页面，如果查不到，返回到登录页面
     * @Param: [account, password]
-    * @return: com.example.demo.domain.Organization
+    * @return: org.springframework.web.servlet.ModelAndView
     * @Author: chenjiajun
     * @Date: 2021/2/25
     */
     @Override
-    public Organization Login(String account,String password) {
-        return organizationMapper.Login(account,password);
+    public ModelAndView Login(String account, String password) {
+        Organization organization = organizationMapper.Login(account,password);
+        ModelAndView mv = new ModelAndView();
+        //查询不到对象时
+        if(organization == null){
+            mv.setViewName("login");
+            mv.addObject("error","账号或者密码错误，请确认后重试");
+            return mv;
+        }
+        //进行参数传递
+        mv.addObject("organization",organization);
+        mv.setViewName("readercommunity");
+        return mv;
     }
 
     /**

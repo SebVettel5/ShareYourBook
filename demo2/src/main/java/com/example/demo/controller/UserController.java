@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -63,13 +64,13 @@ public class UserController {
     /**
      * @Description: 用户使用账号密码登录
      * @Param: [account, password]
-     * @return: com.example.demo.domain.User
+     * @return: org.springframework.web.servlet.ModelAndView
      * @Author: chenjiajun
      * @Date: 2021/2/19
      */
     @RequestMapping("/UserLogin")
     @ResponseBody
-    public User UserLogin(String account,String password){
+    public ModelAndView UserLogin(String account, String password){
         return userServiceImpl.UserLogin(account,password);
     }
 

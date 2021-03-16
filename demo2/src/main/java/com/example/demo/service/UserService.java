@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.domain.User;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface UserService {
     //更新用户信息
     int UpdateUserInformation(User u);
 
-    User UserLogin(String account, String password);
+    ModelAndView UserLogin(String account, String password);
 }

@@ -6,6 +6,7 @@ import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -59,12 +60,30 @@ public class UserServiceImpl implements UserService {
         return res;
     }
 
-    //登录并返回用户对象
+    /**
+    * @Description: 用户登录，在数据库中按照密码账户查找用户，找到的跳转到用户界面，找不到的跳转到当前界面，返回登录错误
+    * @Param: [account, password]
+    * @return: org.springframework.web.servlet.ModelAndView
+    * @Author: chenjiajun
+    * @Date: 2021/3/11
+    */
     @Override
-    public User UserLogin(String account, String password) {
+    public ModelAndView UserLogin(String account, String password) {
         User u = userMapper.Login(account,password);
-        if(u == null)System.out.println("空对象，登录错误");
-        return u;
+        ModelAndView mv = new ModelAndView();
+
+        //当没有查询到用户，返回错误代码
+        if(u == null){
+            mv.addObject("errorinfo","用户名或密码错误，请确认后再试");
+            mv.setViewName("login");
+            return mv;
+        }
+        mv.addObject("user",u);
+        mv.addObject("test","test");
+
+        mv.setViewName("readercommunity");
+        
+        return mv;
     }
 
 

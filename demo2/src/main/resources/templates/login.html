@@ -24,44 +24,26 @@
 				 点击登录按钮的函数
 				 * */
 				lgbtn.onclick = function(){
-					if(paw.value != "" && account.value != ""){
+					if(paw.value !== "" && account.value !== ""){
 						//获取user输入框的内容
 						var context = account.value;
-						alert(context.length)
+						alert(context.length);
 						switch(context.length){
 							case 11:alert("读者");break;
-							case 7:alert("机构-----我们将向您的密保邮箱发送一封验证码，注意查收");
-							        var code = "<%=GetCode%>";
-							        alert(code);
-                                    loginform.action="/AdministratorLogin";
+							case 9:alert("机构-----我们将向您的密保邮箱发送一封验证码，注意查收");
+                                    loginform.action="/OrganizationLogin";
 									checkinputdiv.style.display ="block";
 									checkinput.required="required";
 									break;
 							case 5:alert("管理员-----我们将向您的密保邮箱发送一封验证码，注意查收");
-									checkinputdiv.style.display ="block";
+									loginform.action="/AdministratorLogin";
+							        checkinputdiv.style.display ="block";
 									checkinput.required="required";
 									break;
 							default:alert("错误");break;
 						}
 					}
 				}
-				
-				document.getElementById("1").onclick = function(){
-				    var code = "21t" ;
-				    alert("test");
-                   $.ajax({
-                       url:"/SelectAllUser",
-                       type:"GET",
-                       datatype:"text",
-                       error:function(){
-                           alert("error")
-                       },
-                       success:function () {
-                           code = this;
-                           alert(this.type);
-                       }
-                   });
-                }
 				
 			}
 		</script>
@@ -99,7 +81,6 @@
 							</nav>
 					</div>
 				</section>
-            <button id="1" type="button">test</button>
 			<!-- 主要内容部分 -->
 				<section id="main" >
 					<section class="login-wrap">
@@ -123,7 +104,7 @@
                         </div>
                         <div class="group" id="passdiv" >
                             <label for="pass" class="label">验证码</label>
-                            <input id="pass1" type="text" class="input" data-type="password" required="required" name="checkpassword">
+                            <input id="pass1" type="text" class="input" data-type="password"  name="checkpassword">
                             <a >重新获取密码</a>
                         </div>
                         <div class="group">

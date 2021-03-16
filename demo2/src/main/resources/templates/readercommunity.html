@@ -5,6 +5,15 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../static/css/main.css" />
+        <script type="text/javascript">
+            window.onload = function () {
+                var a = document.getElementById("myspace");
+                a.onclick = function () {
+                    var user = '${test}';
+                    alert(user);
+                }
+            }
+        </script>
 	</head>
 	<body class="readercomunity is-preload">
 		<div id="page-wrapper">
@@ -23,7 +32,7 @@
 									<li><a class="icon solid fa-hand-holding" href="borrowbook.html"><span>图书借阅</span></a></li>
 									<li><a class="icon solid fa-upload" href="uploadbook.html"><span>图书上传</span></a></li>
 									<li><a class="icon solid fa-comment" href="readercommunity.html"><span>书友圈</span></a></li>
-									<li><a class="icon solid fa-user" href="#"><span>登录</span></a></li>
+                                    <li><a class="icon solid fa-user" href="login.html"><span>登录</span></a></li>
 									<li>
 										<a href="#" class="icon fa-star"><span>更多</span></a>
 										<ul>
@@ -61,11 +70,27 @@
 														<article class="box highlight">
 															<header>
 																<h3><a href="#">此处为个人信息展示</a></h3>
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>头像：</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>昵称：</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>等级</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>关注</td>
+                                                                        <td>粉丝</td>
+                                                                    </tr>
+                                                                </table>
 															</header>
 															
 															<ul class="actions">
-																<li><a href="#" class="button icon solid fa-file">Learn More</a></li>
+																<li><a  class="button icon solid fa-file" id="myspace">我的空间</a></li>
 															</ul>
+                                                        </article>
 												</li>
 											</ul>
 										</section>

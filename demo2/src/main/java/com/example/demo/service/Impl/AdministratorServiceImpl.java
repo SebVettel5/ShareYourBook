@@ -7,6 +7,7 @@ import com.example.demo.util.GeneralUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,15 +41,26 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     /**
-    * @Description: 使用account和password作为条件查询，返回查询到的对象
+    * @Description: 使用account和password作为条件查询，返回查询到的对象,查找不到则回到登录页面
     * @Param: [account, password]
-    * @return: com.example.demo.domain.Administrator
+    * @return: org.springframework.web.servlet.ModelAndView
     * @Author: chenjiajun
     * @Date: 2021/2/20
     */
     @Override
-    public Administrator AdminLogin(String account, String password) {
-        return administratorMapper.Login(account,password);
+    public ModelAndView AdminLogin(String account, String password) {
+        Administrator administrator = administratorMapper.Login(account,password);
+        ModelAndView mv = new ModelAndView();
+
+        if (administrator == null){
+            mv.addObject("error","用户名或密码错误，请确认后再试");
+            mv.setViewName("login");
+            return mv;
+        }
+
+        mv.addObject("administrator",administrator);
+        mv.setViewName("administratormain");
+        return mv;
     }
     
     /**

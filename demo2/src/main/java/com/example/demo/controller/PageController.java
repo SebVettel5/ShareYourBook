@@ -11,60 +11,70 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class PageController {
-    @RequestMapping("/homepage")
+    @RequestMapping("/homepage.html")
     public String Hello(){
         return "homepage";
     }
 
-    @RequestMapping("/login")
+    @RequestMapping("/login.html")
     public String Login(){
         return "login";
     }
 
-    @RequestMapping("/about")
+    @RequestMapping("/about.html")
     public  String About(){
         return "about";
     }
 
-    @RequestMapping("/borrowbook")
+    @RequestMapping("/borrowbook.html")
     public String BorrowBook(){
         return "borrowbook";
     }
 
     //忘记密码页面
-    @RequestMapping("/getpassword")
+    @RequestMapping("/getpassword.html")
     public String GetPassWord(){
         return "getpassword";
     }
 
-    @RequestMapping("/news")
+    @RequestMapping("/news.html")
     public String News(){
         return "news";
     }
 
-    @RequestMapping("/orgregister")
+    @RequestMapping("/orgregister.html")
     public String OrgRegister(){
         return "orgregister";
     }
 
-    @RequestMapping("/readercommunity")
+    @RequestMapping("/readercommunity.html")
     public String ReaderCommunity(){
         return "readercommunity";
     }
 
-    @RequestMapping("/servicestatement")
+    @RequestMapping("/servicestatement.html")
     public String ServiceStatement(){
         return "servicestatement";
     }
 
-    @RequestMapping("/uploadbook")
+    @RequestMapping("/uploadbook.html")
     public String UploadBook(){
         return "uploadbook";
     }
 
     //用户指导
-    @RequestMapping("/userguide")
+    @RequestMapping("/userguide.html")
     public String UserGuide(){
         return "userguide";
+    }
+
+    @RequestMapping("/administratormain.html")
+    public String AdminMain(){
+        return "administratormain";
+    }
+
+    @RequestMapping("/welcome.html")
+    public String Welcome(){
+        return "welcome";
     }
 }

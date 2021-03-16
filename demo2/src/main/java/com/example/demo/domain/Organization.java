@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table(name="organization")
 public class Organization {
     @Id
-    private String OrganizationId;
+    private Integer OrganizationId;
     private String OrganizationName;
     private String OrganizationPassword;
     private String OrganizationEmail;
@@ -19,7 +19,9 @@ public class Organization {
     private Integer OrganizationLevel;
 
     //全参构造函数
-    public Organization(String organizationId, String organizationName, String organizationPassword, String organizationEmail, String organizationHeadPic, Integer organizationLevel) {
+
+
+    public Organization(Integer organizationId, String organizationName, String organizationPassword, String organizationEmail, String organizationHeadPic, Integer organizationLevel) {
         OrganizationId = organizationId;
         OrganizationName = organizationName;
         OrganizationPassword = organizationPassword;
@@ -36,11 +38,11 @@ public class Organization {
         OrganizationHeadPic = organizationHeadPic;
     }
 
-    public String getOrganizationId() {
+    public Integer getOrganizationId() {
         return OrganizationId;
     }
 
-    public void setOrganizationId(String organizationId) {
+    public void setOrganizationId(Integer organizationId) {
         OrganizationId = organizationId;
     }
 

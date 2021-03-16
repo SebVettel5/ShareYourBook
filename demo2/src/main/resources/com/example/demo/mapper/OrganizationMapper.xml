@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.OrganizationMapper">
+    <!-- Method: select org by phone and password in org table and return an org object-->
+    <select id="Login" parameterType="String" resultType="com.example.demo.domain.Organization">
+        select
+            *
+        from
+            organization
+        where
+            org_id = #{account}  and  org_password = #{password}
+    </select>
+</mapper>
