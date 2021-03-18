@@ -4,8 +4,11 @@ import com.example.demo.exception.NotFindException;
 import com.example.demo.util.GeneralUtil;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
 * @Description:测试框架运行
@@ -52,5 +55,15 @@ public class controller {
 //         if(blog == null)throw new NotFindException("dee");
          return "homepage";
      }
+
+     @RequestMapping("/test")
+    public  String Test(){
+         return "test";
+     }
+
+//     @RequestMapping("/getCheckcode")
+//    public  void GetCheckCode(RedirectAttributes redirectAttributes){
+//         redirectAttributes.addFlashAttribute("code",generalUtil.GetCode());
+//     }
 
 }

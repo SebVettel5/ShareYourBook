@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head(title)">
+    <title th:replace="${title}">sharebook|homepage</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="../static/css/main.css" />
+    <link rel="stylesheet" href="../static/css/fontstyle.css">
+</head>
+<body>
+        <!-- 导航栏 -->
+                <nav id="nav" th:fragment="nav">
+                    <ul>
+                        <li><a class="icon solid fa-home" href="homepage"><span>主页</span></a></li>
+                        <li><a class="icon solid fa-hand-holding" href="borrowbook"><span>图书借阅</span></a></li>
+                        <li><a class="icon solid fa-upload" href="uploadbook"><span>图书上传</span></a></li>
+                        <li><a class="icon solid fa-comment" href="readercommunity"><span>书友圈</span></a></li>
+                        <li><a class="icon solid fa-user" href="login"><span>登录</span></a></li>
+                        <li>
+                            <a href="#" class="icon fa-star"><span>更多</span></a>
+                            <ul>
+                                <li><a href="about">关于</a></li>
+                                <li><a href="userguide">使用向导</a></li>
+                                <li><a href="news">新闻</a></li>
+                                <li><a href="servicestatement">隐私条款声明</a></li>
+                                <li><a href="#">其他</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+        <!-- 页脚部分 -->
+        <section id="footer" th:fragment="foot">
+            <div class="container">
+                <header>
+                    <h2>留着看以后干嘛</h2>
+                </header>
+            </div>
+            <div id="copyright" class="container">
+                <ul class="links">
+                    <li>&copy; </li>
+                </ul>
+                <ul> S H A R E &nbsp;B O O K S ||夏 &nbsp;&nbsp;&nbsp;书</ul>
+            </div>
+        </section>
+        <!-- js代码-->
+        <div id="script" th:fragment="script">
+            <!-- Scripts -->
+            <script src="../static/js/jquery.min.js"></script>
+            <script src="../static/js/jquery.dropotron.min.js"></script>
+            <script src="../static/js/browser.min.js"></script>
+            <script src="../static/js/breakpoints.min.js"></script>
+            <script src="../static/js/util.js"></script>
+            <script src="../static/js/main.js"></script>
+        </div>
+</body>
+</html>

@@ -200,6 +200,7 @@ input, select, textarea {
 /* Container */
 
 	.container {
+        background-color: #EBEBEB;
 		margin: 0 auto;
 		max-width: 100%;
 		width: 70em;
@@ -1897,9 +1898,9 @@ input, select, textarea {
 /* Header */
 
 	#header {
+        background-color: #EBEBEB;
 		position: relative;
 		position: relative;
-		background: #fff;
 		text-align: center;
 	}
 

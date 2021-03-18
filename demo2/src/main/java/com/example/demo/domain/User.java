@@ -23,11 +23,13 @@ public class User {
     private String UserSex;
     private String UserCareer;
     private String UserOrg;//用户所属机构
+    private int UserFollowerCount;
+    private int UserFansCount;
 
     public User() {
     }
 
-    public User(String userId, String userName, String userPhone, String userEmail, String userHeadPic, String userLevel, String userPassword, String userAge, String userSex, String userCareer, String userOrg) {
+    public User(String userId, String userName, String userPhone, String userEmail, String userHeadPic, String userLevel, String userPassword, String userAge, String userSex, String userCareer, String userOrg, int userFollowerCount, int userFansCount) {
         UserId = userId;
         UserName = userName;
         UserPhone = userPhone;
@@ -39,17 +41,14 @@ public class User {
         UserSex = userSex;
         UserCareer = userCareer;
         UserOrg = userOrg;
+        UserFollowerCount = userFollowerCount;
+        UserFansCount = userFansCount;
     }
-    
-    /**
-    * @Description: 使用userphone和userpassword两个属性的构造方法，适用于用户初次注册场景
-    * @Param: [userPhone, userPassword]
-    * @return:
-    * @Author: chenjiajun
-    * @Date: 2021/2/19
-    */
-    public User(String userPhone, String userPassword) {
+
+    public User(String userName, String userPhone, String userEmail, String userPassword) {
+        UserName = userName;
         UserPhone = userPhone;
+        UserEmail = userEmail;
         UserPassword = userPassword;
     }
 
@@ -67,7 +66,41 @@ public class User {
                 ", UserSex='" + UserSex + '\'' +
                 ", UserCareer='" + UserCareer + '\'' +
                 ", UserOrg='" + UserOrg + '\'' +
+                ", UserFollowerCount=" + UserFollowerCount +
+                ", UserFansCount=" + UserFansCount +
                 '}';
+    }
+
+    public void setUserAge(String userAge) {
+        UserAge = userAge;
+    }
+
+    public void setUserSex(String userSex) {
+        UserSex = userSex;
+    }
+
+    public void setUserCareer(String userCareer) {
+        UserCareer = userCareer;
+    }
+
+    public void setUserOrg(String userOrg) {
+        UserOrg = userOrg;
+    }
+
+    public int getUserFollowerCount() {
+        return UserFollowerCount;
+    }
+
+    public void setUserFollowerCount(int userFollowerCount) {
+        UserFollowerCount = userFollowerCount;
+    }
+
+    public int getUserFansCount() {
+        return UserFansCount;
+    }
+
+    public void setUserFansCount(int userFansCount) {
+        UserFansCount = userFansCount;
     }
 
     public String getUserAge() {

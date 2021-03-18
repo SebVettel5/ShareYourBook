@@ -21,4 +21,12 @@
                 user_phone = #{account}
             and user_password = #{password}
     </select>
+    <select id="SelectUserByName" parameterType="String" resultType="com.example.demo.domain.User">
+        select
+            *
+        from
+            user
+        where
+            user_name = #{userName}
+    </select>
 </mapper>

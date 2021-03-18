@@ -28,5 +28,8 @@ public interface UserMapper extends BaseMapper<User> {
     * @Date: 2021/2/20
     */
     User Login(String account, String password);
+
+
+    User SelectUserByName(String userName);
 }
 

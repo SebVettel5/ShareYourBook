@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>sharebook|login</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../static/css/main.css" />
 		<link rel="stylesheet" href="../static/css/style.css"/>
-		<script type="text/javascript">
+		<script type="text/javascript" th:inline="javascript">
 			window.onload=function(){
 				//获取验证码输入框
 				var checkinputdiv = document.getElementById("passdiv");
@@ -54,31 +54,11 @@
 			<!-- 页首部分 -->
 				<section id="header" style="background-color: #EBEBEB;">
 					<div class="container">
-
 						<!-- Logo -->
 							<h1 id="title">夏         书|共享图书驿站</h1>
 							<p>让	文	字	跨	过	千	山	万	水	来	见	你</p>
-
-						<!-- Nav -->
-							<nav id="nav">
-								<ul>
-									<li><a class="icon solid fa-home" href="homepage.html"><span>主页</span></a></li>
-									<li><a class="icon solid fa-hand-holding" href="borrowbook.html"><span>图书借阅</span></a></li>
-									<li><a class="icon solid fa-upload" href="uploadbook.html"><span>图书上传</span></a></li>
-									<li><a class="icon solid fa-comment" href="readercommunity.html"><span>书友圈</span></a></li>
-									<li><a class="icon solid fa-user" href="login.html"><span>登录</span></a></li>
-									<li>
-										<a href="#" class="icon fa-star"><span>更多</span></a>
-										<ul>
-											<li><a href="about.html">关于</a></li>
-											<li><a href="useguide.html">使用向导</a></li>
-											<li><a href="news.html">新闻</a></li>
-											<li><a href="servicestatement.html">隐私条款声明</a></li>
-											<li><a href="#">其他</a></li>
-										</ul>
-									</li>
-								</ul>
-							</nav>
+                        <!-- Nav -->
+                        <nav id="nav" th:replace="fragments :: nav"></nav>
 					</div>
 				</section>
 			<!-- 主要内容部分 -->
@@ -91,7 +71,7 @@
             <label for="tab-2" class="tab">注    册</label>
             <div class="login-form">
 
-                <!-- signin form -->
+                <!-- 登录表单 -->
                 <div class="signin_wthree">
                     <form id="loginform" method="post" action="/UserLogin">
                         <div class="group">
@@ -99,13 +79,14 @@
                             <input id="user" type="text" class="input" required="required" name="account">
                         </div>
                         <div class="group">
-                            <label for="pass" class="label">密码</label>
-                            <input id="pass" type="password" class="input" data-type="password" required="required" name="password">
+                            <label for="pass" class="label">密码 </label>
+                            <input id="pass" type="password" class="input " data-type="password" required="required" name="password">
+<!--                            <span class="icon solid fa-eye-slash"></span>-->
                         </div>
                         <div class="group" id="passdiv" >
                             <label for="pass" class="label">验证码</label>
                             <input id="pass1" type="text" class="input" data-type="password"  name="checkpassword">
-                            <a >重新获取密码</a>
+                            <a href="/getCheckcode">重新获取验证码</a>
                         </div>
                         <div class="group">
                             <input id="check" type="checkbox" class="check" checked>
@@ -114,80 +95,76 @@
                         </div>
                         <div class="group">
                             <input type="submit" class="button" value="登录" id="lgbt">
-
                         </div>
-                        <div class="hr"></div>
                         <div class="foot-lnk">
-                            <h3><a href="#">忘记密码？</a></h3>
+                            <h3><a th:unless="${#strings.isEmpty(errorInfo)}" th:text="${errorInfo}">密码错误</a>
+                                <a href="#">&nbsp &nbsp 忘记密码？</a>
+                            </h3>
                         </div>
                     </form>
                 </div>
-                <!-- //signin form -->
-                <!-- signup form -->
+                <!-- //登录表单 -->
+                <!-- 注册表单 -->
                 <div class="signup_wthree">
-                    <form method="post" action="#">
+                    <form method="post" action="/UserRegister">
+                        <div class="group">
+                            <label for="phone" class="label">手机号</label>
+                            <input id="phone" type="text" class="input" onkeyup="value=value.replace(/[^\d]/g,'')"
+                                   maxlength="11" required="required" name="phone">
+                        </div>
                         <div class="group">
                             <label for="user1" class="label">用户名</label>
-                            <input id="user1" type="text" class="input" required>
+                            <input id="user1" type="text" class="input" required="required" name="username">
                         </div>
                         <div class="group">
                             <label for="password1" class="label">密码</label>
-                            <input id="password1" type="password" class="input" data-type="password" required>
+                            <input id="password1" type="text" class="input" data-type="password" required="required" name="password">
                         </div>
                         <div class="group">
                             <label for="password2" class="label">重新输入密码</label>
-                            <input id="password2" type="password" class="input" data-type="password" required>
+                            <input id="password2" type="text" class="input" data-type="password" required="required">
                         </div>
                         <div class="group">
                             <label for="email" class="label">邮箱地址</label>
-                            <input id="email" type="email" class="input" required>
+                            <input id="email" type="email" class="input" required="required" name="email">
                         </div>
                         <div class="group">
                             <input type="submit" class="button" value="开启悦读之旅">
                         </div>
                     </form>
                 </div>
-                <!-- //signup form -->
+                <!-- //注册表单 -->
             </div>
         </div>
     </section>
 				
 				</section>
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-
-			<!-- 页脚部分 -->
-				<section id="footer">
-					<div class="container">
-						<header>
-							<h2>留着看以后干嘛</h2>
-						</header>
-					</div>
-					<div id="copyright" class="container">
-						<ul class="links">
-							<li>&copy; chenjiajun所有，部分素材来自开源社区，仅供学习交流</li>
-						</ul>
-						<ul>&reg; S H A R E &nbsp;B O O K S ||&reg;夏 &nbsp;&nbsp;&nbsp;书</ul>
-					</div>
-				</section>
-
+            <!-- 页脚部分 -->
+            <section id="footer" th:replace="fragments :: foot"></section>
 		</div>
+        <div th:replace="fragments :: script"></div>
+        <script>
+            window.onload = function () {
+                document.getElementById("password1").onchange = validatePassword;
+                document.getElementById("password2").onchange = validatePassword;
+                document.getElementById("phone").onchange = checkPhone;
+            }
 
-		<!-- Scripts -->
-			<script src="../static/js/jquery.min.js"></script>
-			<script src="../static/js/jquery.dropotron.min.js"></script>
-			<script src="../static/js/browser.min.js"></script>
-			<script src="../static/js/breakpoints.min.js"></script>
-			<script src="../static/js/util.js"></script>
-			<script src="../static/js/main.js"></script>
+            function validatePassword() {
+                var pass2 = document.getElementById("password2").value;
+                var pass1 = document.getElementById("password1").value;
+                if (pass1 != pass2)
+                    document.getElementById("password2").setCustomValidity("两次密码不匹配，请确认后再输入");
+                else
+                    document.getElementById("password2").setCustomValidity('');
+                //empty string means no validation error
+            }
 
+            function checkPhone() {
+                var phoneNum = document.getElementById("phone");
+                if(phoneNum.length !== 11 || )
+                    document.getElementById("phone").setCustomValidity("手机号格式错误");
+            }
+        </script>
 	</body>
 </html>

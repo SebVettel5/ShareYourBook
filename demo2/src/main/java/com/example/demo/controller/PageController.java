@@ -11,70 +11,81 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class PageController {
-    @RequestMapping("/homepage.html")
+    @RequestMapping("/homepage")
     public String Hello(){
         return "homepage";
     }
 
-    @RequestMapping("/login.html")
+    @RequestMapping("/login")
     public String Login(){
         return "login";
     }
 
-    @RequestMapping("/about.html")
+    @RequestMapping("/about")
     public  String About(){
         return "about";
     }
 
-    @RequestMapping("/borrowbook.html")
+    @RequestMapping("/borrowbook")
     public String BorrowBook(){
         return "borrowbook";
     }
 
     //忘记密码页面
-    @RequestMapping("/getpassword.html")
+    @RequestMapping("/getpassword")
     public String GetPassWord(){
         return "getpassword";
     }
 
-    @RequestMapping("/news.html")
+    @RequestMapping("/news")
     public String News(){
         return "news";
     }
 
-    @RequestMapping("/orgregister.html")
+    @RequestMapping("/orgregister")
     public String OrgRegister(){
         return "orgregister";
     }
 
-    @RequestMapping("/readercommunity.html")
+    @RequestMapping("/readercommunity")
     public String ReaderCommunity(){
         return "readercommunity";
     }
 
-    @RequestMapping("/servicestatement.html")
+    @RequestMapping("/servicestatement")
     public String ServiceStatement(){
         return "servicestatement";
     }
 
-    @RequestMapping("/uploadbook.html")
+    @RequestMapping("/uploadbook")
     public String UploadBook(){
         return "uploadbook";
     }
 
     //用户指导
-    @RequestMapping("/userguide.html")
+    @RequestMapping("/userguide")
     public String UserGuide(){
         return "userguide";
     }
 
-    @RequestMapping("/administratormain.html")
+    @RequestMapping("/administratormain")
     public String AdminMain(){
         return "administratormain";
     }
 
-    @RequestMapping("/welcome.html")
+    @RequestMapping("/welcome")
     public String Welcome(){
         return "welcome";
+    }
+
+    //页面通用fragments
+    @RequestMapping("/fragments")
+    public String Fragments(){
+        return "fragments";
+    }
+
+    @RequestMapping("/personalpage")
+    public String PersonalPage(){
+        return "personalpage";
     }
 }

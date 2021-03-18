@@ -7,7 +7,10 @@ import com.example.demo.util.GeneralUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -48,19 +51,20 @@ public class AdministratorServiceImpl implements AdministratorService {
     * @Date: 2021/2/20
     */
     @Override
-    public ModelAndView AdminLogin(String account, String password) {
+    public String  AdminLogin(@RequestParam String account,
+                                   @RequestParam String password,
+                                   Model model,
+                                   RedirectAttributes redirectAttributes) {
         Administrator administrator = administratorMapper.Login(account,password);
-        ModelAndView mv = new ModelAndView();
 
         if (administrator == null){
-            mv.addObject("error","用户名或密码错误，请确认后再试");
-            mv.setViewName("login");
-            return mv;
+            redirectAttributes.addFlashAttribute("errorInfo","用户名或者密码错误");
+            return "redirect : /login";
         }
-
-        mv.addObject("administrator",administrator);
-        mv.setViewName("administratormain");
-        return mv;
+        //将密码设置为空，防止密码泄露
+        administrator.setAdminPassword("");
+        model.addAttribute("admin",administrator);
+        return "administratormain";
     }
     
     /**

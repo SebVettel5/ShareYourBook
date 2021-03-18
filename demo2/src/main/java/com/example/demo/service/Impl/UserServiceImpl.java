@@ -3,13 +3,15 @@ package com.example.demo.service.Impl;
 import com.example.demo.domain.User;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @Service
 @Transactional
+@SessionAttributes(value = {"user","errorInfo"})
 public class UserServiceImpl implements UserService {
     @Resource
     //Resource 自动ByName进行注解
@@ -38,11 +41,27 @@ public class UserServiceImpl implements UserService {
 
     //添加用户
     @Override
-    public User UserRegister(User user) {
-        int res = userMapper.NewUserRegister(user);
-        if(res == 0)System.out.println("插入失败！");
-        //新建用户后，重新再从表中查询到这个用户，返回初始设定的用户信息
-        return SelectUserByPhone(user.getUserPhone());
+    public String  UserRegister(@RequestParam String phone,
+                                @RequestParam String username,
+                                @RequestParam String userpassword,
+                                String email,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+        User u = new User(username,phone,email,userpassword);
+        //插入失败，捕获异常，进行异常处理，重定向到login
+        try{
+            userMapper.NewUserRegister(u);
+        }
+        catch (DuplicateKeyException e){
+            redirectAttributes.addFlashAttribute("errorInfo","注册失败，该用户已经存在，请联系管理员");
+            return "redirect:/login";
+        }
+
+        //插入成功，直接跳转到readercommunity,并返回查询到的user对象
+        u = userMapper.SelectUserByName(u.getUserName());
+        u.setUserPassword("");
+        model.addAttribute("user",u);
+        return "readercommunity";
     }
 
     //按id删除用户
@@ -59,7 +78,6 @@ public class UserServiceImpl implements UserService {
         int res = userMapper.updateByPrimaryKeySelective(u);
         return res;
     }
-
     /**
     * @Description: 用户登录，在数据库中按照密码账户查找用户，找到的跳转到用户界面，找不到的跳转到当前界面，返回登录错误
     * @Param: [account, password]
@@ -68,22 +86,21 @@ public class UserServiceImpl implements UserService {
     * @Date: 2021/3/11
     */
     @Override
-    public ModelAndView UserLogin(String account, String password) {
+    public String UserLogin(@RequestParam  String account,
+                            @RequestParam String password,
+                            Model model,
+                            RedirectAttributes redirectAttributes) {
         User u = userMapper.Login(account,password);
-        ModelAndView mv = new ModelAndView();
 
         //当没有查询到用户，返回错误代码
         if(u == null){
-            mv.addObject("errorinfo","用户名或密码错误，请确认后再试");
-            mv.setViewName("login");
-            return mv;
+            redirectAttributes.addFlashAttribute("errorInfo","用户名或者密码错误");
+//            model.addAttribute("errorInfo","用户名或者密码错误");
+            return "redirect:/login";
         }
-        mv.addObject("user",u);
-        mv.addObject("test","test");
-
-        mv.setViewName("readercommunity");
-        
-        return mv;
+        u.setUserPassword("");
+        model.addAttribute("user",u);
+        return "readercommunity";
     }
 
 

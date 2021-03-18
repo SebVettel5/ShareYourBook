@@ -1,12 +1,13 @@
 package com.example.demo.controller;
 
+import org.springframework.ui.Model;
 import com.example.demo.domain.User;
 import com.example.demo.service.Impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -69,9 +70,8 @@ public class UserController {
      * @Date: 2021/2/19
      */
     @RequestMapping("/UserLogin")
-    @ResponseBody
-    public ModelAndView UserLogin(String account, String password){
-        return userServiceImpl.UserLogin(account,password);
+    public String UserLogin(String account, String password, Model model, RedirectAttributes redirectAttributes){
+        return userServiceImpl.UserLogin(account,password,model,redirectAttributes);
     }
 
     /**
@@ -82,9 +82,8 @@ public class UserController {
      * @Date: 2021/2/19
      */
     @RequestMapping("/UserRegister")
-    @ResponseBody
-    public User UserRegister(String userphone,String userpassword){
-        User u = new User(userphone,userpassword);
-        return  userServiceImpl.UserRegister(u);
+    public String UserRegister(String phone,String username,String password,String email,
+                               Model model,RedirectAttributes redirectAttributes){
+        return  userServiceImpl.UserRegister(phone,username,password,email,model,redirectAttributes);
     }
 }

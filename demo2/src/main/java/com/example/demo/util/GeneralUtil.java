@@ -25,16 +25,16 @@ public class GeneralUtil {
         return "11111";
     }
 
-//    public ModelAndView LoginToPage(Object object,String TargetPage,String ErrorPage){
-//        ModelAndView mv = new ModelAndView();
-//        if (object == null){
-//            mv.addObject("error","账号或者密码错误，请检查后再登录");
-//            mv.setViewName(ErrorPage);
-//            return mv;
-//        }
-//        mv.addObject("user",u);
-//        mv.setViewName(TargetPage);
-//
-//        return mv;
-//    }
+    /**
+    * @Description: 生成随机数方法
+    * @Param: []
+    * @return: java.lang.String
+    * @Author: chenjiajun
+    * @Date: 2021/3/17
+    */
+    public String GetCheckCode(){
+        int ran = (int) ((Math.random() * 9 + 1) * Math.pow(10,  4));
+        System.out.println(ran);
+        return String.valueOf(ran);
+    }
 }
