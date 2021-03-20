@@ -64,7 +64,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         //将密码设置为空，防止密码泄露
         administrator.setAdminPassword("");
         model.addAttribute("admin",administrator);
-        return "administratormain";
+        return "admin/administratormain";
     }
     
     /**

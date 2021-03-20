@@ -133,7 +133,7 @@ input, select, textarea {
 		transition: color 0.25s ease-in-out, border-bottom-color 0.25s ease-in-out;
 		color: #666;
 		text-decoration: none;
-		border-bottom: solid 1px #ddd;
+		/*border-bottom: solid 1px #ddd;*/
 	}
 
 		a strong {
@@ -200,7 +200,7 @@ input, select, textarea {
 /* Container */
 
 	.container {
-        background-color: #EBEBEB;
+        /*background-color: #EBEBEB;*/
 		margin: 0 auto;
 		max-width: 100%;
 		width: 70em;
@@ -1531,7 +1531,7 @@ input, select, textarea {
 
 		ul li {
 			padding-left: 0.5em;
-			margin: 0.75em 0 0.75em 0;
+			/*margin: 0.75em 0 0.75em 0;*/
 		}
 
 			ul li:first-child {

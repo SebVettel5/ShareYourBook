@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author ：chenjiajun
@@ -68,9 +67,9 @@ public class PageController {
         return "userguide";
     }
 
-    @RequestMapping("/administratormain")
+    @RequestMapping("/admin/administratormain")
     public String AdminMain(){
-        return "administratormain";
+        return "admin/administratormain";
     }
 
     @RequestMapping("/welcome")
