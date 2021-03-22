@@ -1,0 +1,47 @@
+/*数据库：sharebookv2*/-------------------------
+
+/*表信息*/-----------
+
+Name            Engine  Version  Row_format    Rows  Avg_row_length  Data_length  Max_data_length  Index_length  Data_free  Auto_increment          Create_time  Update_time          Check_time  Collation           Checksum  Create_options  Comment  
+--------------  ------  -------  ----------  ------  --------------  -----------  ---------------  ------------  ---------  --------------  -------------------  -------------------  ----------  ------------------  --------  --------------  ---------
+administrators  InnoDB       10  Dynamic          0               0        16384                0             0          0           10002  2021-03-22 21:35:02  2021-03-22 21:35:37  (NULL)      utf8mb4_0900_ai_ci    (NULL)                           
+books           InnoDB       10  Dynamic          0               0        16384                0             0          0          (NULL)  2021-03-22 21:59:50  (NULL)               (NULL)      utf8mb4_0900_ai_ci    (NULL)                           
+organizations   InnoDB       10  Dynamic          0               0        16384                0             0          0          (NULL)  2021-03-22 21:55:01  (NULL)               (NULL)      utf8mb4_0900_ai_ci    (NULL)                           
+users           InnoDB       10  Dynamic          1           16384        16384                0             0          0         1000023  2021-03-22 21:23:33  (NULL)               (NULL)      utf8mb4_0900_ai_ci    (NULL)                           
+
+/*查看信息*/--------------
+
+View_name  VIEW_DEFINITION  CHECK_OPTION  IS_UPDATABLE  DEFINER  SECURITY_TYPE  
+---------  ---------------  ------------  ------------  -------  ---------------
+
+
+/*过程信息*/--------------
+
+Db      Name    Type    Definer  Modified  Created  Security_type  Comment  character_set_client  collation_connection  Database Collation  
+------  ------  ------  -------  --------  -------  -------------  -------  --------------------  --------------------  --------------------
+
+
+/*函数信息*/--------------
+
+Db      Name    Type    Definer  Modified  Created  Security_type  Comment  character_set_client  collation_connection  Database Collation  
+------  ------  ------  -------  --------  -------  -------------  -------  --------------------  --------------------  --------------------
+
+
+/*触发器信息*/-----------------
+
+Trigger  Event   Table   Statement  Timing  Created  sql_mode  Definer  character_set_client  collation_connection  Database Collation  
+-------  ------  ------  ---------  ------  -------  --------  -------  --------------------  --------------------  --------------------
+
+
+
+/*Event Information*/
+---------------------
+
+EVENT_NAME  DEFINER  EVENT_TYPE  EXECUTE_AT  INTERVAL_VALUE  INTERVAL_FIELD  STARTS  ENDS    STATUS  
+----------  -------  ----------  ----------  --------------  --------------  ------  ------  --------
+
+
+/*DDL 信息 - sharebookv2*/--------------------------
+
+CREATE DATABASE `sharebookv2` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */
+
