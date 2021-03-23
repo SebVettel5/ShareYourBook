@@ -37,25 +37,42 @@
 											<ul class="divided">
 												<li>
 														<article class="box highlight">
-															<header>
+															<header >
 																<h3>信   息|INFORMATION</h3>
-                                                                <table>
+                                                                <div th:switch="${session.userType}">
+                                                                    <table th:case="user">
+                                                                        <tr>
+                                                                            <td class="tabel-title">头像</td>
+                                                                            <td th:src="${session.user.userAvatar}">null</td>
+                                                                        </tr>
+                                                                        <tr><td class="tabel-title">昵称</td>
+                                                                            <td th:text="${session.user.userNickname}" class="tabel-content">张三</td>
+                                                                        </tr>
+<!--                                                                        <tr>-->
+<!--                                                                            <td class="tabel-title">关注</td>-->
+<!--                                                                            <td th:text="${user.UserFollowerCount}" class="tabel-content">0</td>-->
+<!--                                                                            <td class="tabel-title">粉丝</td>-->
+<!--                                                                            <td th:text="${user.UserFansCount}" class="tabel-content">0</td>-->
+<!--                                                                        </tr>-->
+                                                                    </table>
+                                                                    <table th:case="org">
                                                                     <tr>
                                                                         <td class="tabel-title">头像</td>
-                                                                        <td th:src="${user.UserHeadPic}">null</td>
+                                                                        <td th:src="${session.org.Avatar}">null</td>
                                                                     </tr>
                                                                     <tr><td class="tabel-title">昵称</td>
-                                                                        <td th:text="${user.UserName}" class="tabel-content">张三</td>
-                                                                        <td class="tabel-title">等级</td>
-                                                                        <td th:text="${user.UserLevel}" class="tabel-content">1</td>
+                                                                        <td th:text="${session.org.orgName}" class="tabel-content">张三</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="tabel-title">关注</td>
-                                                                        <td th:text="${user.UserFollowerCount}" class="tabel-content">0</td>
+<!--                                                                        <td class="tabel-title">关注</td>-->
+<!--                                                                        <td th:text="${session.org.UserFollowerCount}" class="tabel-content">0</td>-->
                                                                         <td class="tabel-title">粉丝</td>
-                                                                        <td th:text="${user.UserFansCount}" class="tabel-content">0</td>
+                                                                        <td th:text="${session.org.fansCount}" class="tabel-content">0</td>
                                                                     </tr>
                                                                 </table>
+                                                                </div>
+
+
 															</header>
 															
 															<ul class="actions">

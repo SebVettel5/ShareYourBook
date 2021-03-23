@@ -27,7 +27,7 @@ public interface UserMapper extends BaseMapper<User> {
     * @Author: chenjiajun
     * @Date: 2021/2/20
     */
-    User Login(String account, String password);
+    User Login(Long phone, String password);
 
 
     User SelectUserByName(String userName);

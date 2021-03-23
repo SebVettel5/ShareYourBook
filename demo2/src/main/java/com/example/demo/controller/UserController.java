@@ -5,10 +5,13 @@ import com.example.demo.domain.User;
 import com.example.demo.service.Impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -45,7 +48,7 @@ public class UserController {
      */
     @RequestMapping("/DeleteUserById")
     @ResponseBody
-    public int DeleteUserById(String id){
+    public int DeleteUserById(Long id){
         return userServiceImpl.DeleteUserById(id);
     }
 
@@ -69,9 +72,13 @@ public class UserController {
      * @Author: chenjiajun
      * @Date: 2021/2/19
      */
-    @RequestMapping("/UserLogin")
-    public String UserLogin(String account, String password, Model model, RedirectAttributes redirectAttributes){
-        return userServiceImpl.UserLogin(account,password,model,redirectAttributes);
+    @PostMapping("/UserLogin")
+    public String UserLogin(@RequestParam String account,
+                            @RequestParam String password,
+                            Model model,
+                            RedirectAttributes redirectAttributes,
+                            HttpSession session){
+        return userServiceImpl.UserLogin(account,password,model,redirectAttributes,session);
     }
 
     /**
@@ -82,7 +89,7 @@ public class UserController {
      * @Date: 2021/2/19
      */
     @RequestMapping("/UserRegister")
-    public String UserRegister(String phone,String username,String password,String email,
+    public String UserRegister(Long phone,String username,String password,String email,
                                Model model,RedirectAttributes redirectAttributes){
         return  userServiceImpl.UserRegister(phone,username,password,email,model,redirectAttributes);
     }

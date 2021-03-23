@@ -3,29 +3,27 @@
 <mapper namespace="com.example.demo.mapper.UserMapper">
     <!-- Method: insert new User information into user table -->
     <insert id="NewUserRegister" parameterType="com.example.demo.domain.User" >
-        Insert into user(
-            user_name,user_phone,user_email,user_head_pic,
-            user_level,user_password,user_age,user_sex,
-            user_career,user_org) values(
-            #{UserName},#{UserPhone},#{UserEmail},#{UserHeadPic},
-            #{UserLevel},#{UserPassword},#{UserAge},#{UserSex},
-            #{UserCareer},#{UserOrg})
+        Insert into users(
+            user_nickname,user_phone,user_password,user_email,
+            user_avatar,user_age,user_sex,) values(
+            #{userNickname},#{userPhone},#{userPassword},
+            #{userEmail},#{userAvatar},#{userAge},#{userSex})
     </insert>
     <!-- Method: select user by phone and password in user table and return an user object-->
-    <select id="Login" parameterType="String" resultType="com.example.demo.domain.User">
+    <select id="Login"  resultType="com.example.demo.domain.User">
         select
             *
         from
-            user
+            users
         where
-                user_phone = #{account}
+                user_phone = #{phone}
             and user_password = #{password}
     </select>
     <select id="SelectUserByName" parameterType="String" resultType="com.example.demo.domain.User">
         select
             *
         from
-            user
+            users
         where
             user_name = #{userName}
     </select>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:fragment="head(title)">
-    <title th:replace="${title}">sharebook|homepage</title>
+    <title th:replace="${title}">sharebook|fragment</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="../static/css/main.css" />
@@ -15,7 +15,14 @@
                         <li><a class="icon solid fa-hand-holding" href="borrowbook"><span>图书借阅</span></a></li>
                         <li><a class="icon solid fa-upload" href="uploadbook"><span>图书上传</span></a></li>
                         <li><a class="icon solid fa-comment" href="readercommunity"><span>书友圈</span></a></li>
-                        <li><a class="icon solid fa-user" href="login"><span>登录</span></a></li>
+                        <li th:unless="${session.userType}"><a class="icon solid fa-user"  href="login" ><span>登录</span></a>
+                        </li>
+                        <li th:unless="not ${session.user}"><a class="icon solid fa-user"  href="personalpage"
+                               th:text="'欢迎！ '+${session.user.userNickname}"><span>登录</span>1</a>
+                        </li>
+                        <li th:unless="not ${session.org}"><a class="icon solid fa-user"  href="personalpage"
+                               th:text="'欢迎！ '+${session.org.orgName}"><span>登录</span>2</a>
+                        </li>
                         <li>
                             <a href="#" class="icon fa-star"><span>更多</span></a>
                             <ul>

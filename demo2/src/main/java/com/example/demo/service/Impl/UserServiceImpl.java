@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -35,13 +36,13 @@ public class UserServiceImpl implements UserService {
 
     //按UserPhone查询用户
     @Override
-    public User SelectUserByPhone(String Phone) {
+    public User SelectUserByPhone(Long Phone) {
         return userMapper.selectByPrimaryKey(Phone);
     }
 
     //添加用户
     @Override
-    public String  UserRegister(@RequestParam String phone,
+    public String  UserRegister(@RequestParam Long phone,
                                 @RequestParam String username,
                                 @RequestParam String userpassword,
                                 String email,
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //插入成功，直接跳转到readercommunity,并返回查询到的user对象
-        u = userMapper.SelectUserByName(u.getUserName());
+        u = userMapper.SelectUserByName(u.getUserNickname());
         u.setUserPassword("");
         model.addAttribute("user",u);
         return "readercommunity";
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
     //按id删除用户
     @Override
-    public int DeleteUserById(String id) {
+    public int DeleteUserById(Long id) {
         User u = new User();
         u.setUserId(id);
         return userMapper.delete(u);
@@ -86,11 +87,12 @@ public class UserServiceImpl implements UserService {
     * @Date: 2021/3/11
     */
     @Override
-    public String UserLogin(@RequestParam  String account,
+    public String UserLogin(String phone,
                             @RequestParam String password,
                             Model model,
-                            RedirectAttributes redirectAttributes) {
-        User u = userMapper.Login(account,password);
+                            RedirectAttributes redirectAttributes,
+                            HttpSession session) {
+        User u = userMapper.Login(Long.valueOf(phone),password);
 
         //当没有查询到用户，返回错误代码
         if(u == null){
@@ -99,8 +101,11 @@ public class UserServiceImpl implements UserService {
             return "redirect:/login";
         }
         u.setUserPassword("");
-        model.addAttribute("user",u);
-        return "readercommunity";
+        //将用户对象和用户类型传入会话域中
+        session.setAttribute("user",u);
+        //这里使用userType来区分用户类别
+        session.setAttribute("userType","user");
+        return "redirect:/readercommunity";
     }
 
 

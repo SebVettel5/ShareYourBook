@@ -18,7 +18,8 @@
             </nav>
         </div>
     </section>
-
+    <div th:unless="${user == null}">11</div>
+    <div th:text="${user.userEmail}"></div>
     <!-- 页脚部分 -->
     <section id="footer" th:replace="fragments :: foot"></section>
 </div>

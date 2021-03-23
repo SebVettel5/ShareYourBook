@@ -69,7 +69,9 @@
 								</div>
 
 							<!-- 右侧信息部分 -->
-								<div id="content" class="col-8 col-12-medium imp-medium"></div>
+								<div id="content" class="col-8 col-12-medium imp-medium">
+                                    <div th:text="${session.user.userEmail}"></div>
+                                </div>
                         </div>
                     </div>
 				</section>

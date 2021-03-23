@@ -5,6 +5,7 @@ import com.example.demo.domain.User;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface UserService {
@@ -12,16 +13,16 @@ public interface UserService {
     List<User> SelectAllUser();
 
     //按UserPhone查找用户
-    User SelectUserByPhone(String Phone);
+    User SelectUserByPhone(Long Phone);
 
     //添加用户
-    String UserRegister(String phone,String username, String userpassword, String email, Model model, RedirectAttributes redirectAttributes);
+    String UserRegister(Long phone,String username, String userpassword, String email, Model model, RedirectAttributes redirectAttributes);
 
     //按照id删除用户
-    int DeleteUserById(String id);
+    int DeleteUserById(Long id);
 
     //更新用户信息
     int UpdateUserInformation(User u);
 
-    String UserLogin(String account, String password, Model model, RedirectAttributes redirectAttributes);
+    String UserLogin(String phone, String password, Model model, RedirectAttributes redirectAttributes, HttpSession session);
 }
