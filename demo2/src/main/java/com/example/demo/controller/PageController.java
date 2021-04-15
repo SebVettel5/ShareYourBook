@@ -1,7 +1,13 @@
 package com.example.demo.controller;
 
+import com.example.demo.domain.BookUploadRecords;
+import com.example.demo.service.Impl.RecordsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 /**
  * @author ：chenjiajun
@@ -10,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class PageController {
+    @Autowired
+    private RecordsServiceImpl recordsService;
+
+
     @RequestMapping("/homepage")
     public String Hello(){
         return "homepage";
@@ -87,5 +97,26 @@ public class PageController {
     public String PersonalPage(){
         return "personalpage";
     }
+
+    @RequestMapping("/tabletest")
+    public String tabletest(){
+        return "tabletest";
+    }
+
+    @RequestMapping("/imgtest")
+    public String imgtest(){
+        return  "imgtest";
+    }
+
+    @RequestMapping("/org/orgmanage")
+    public  String orgManage(){
+        return "org/orgmanagepage";
+    }
+
+    @RequestMapping("/org/uploadrecords")
+    public String orgUploadRecords(){
+        return "org/uploadrecords";
+    }
+
 
 }

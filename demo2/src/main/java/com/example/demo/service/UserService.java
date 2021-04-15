@@ -16,7 +16,13 @@ public interface UserService {
     User SelectUserByPhone(Long Phone);
 
     //添加用户
-    String UserRegister(Long phone,String username, String userpassword, String email, Model model, RedirectAttributes redirectAttributes);
+    String UserRegister(Long phone,
+                        String username,
+                        String userpassword,
+                        String email,
+                        Model model,
+                        RedirectAttributes redirectAttributes,
+                        HttpSession session);
 
     //按照id删除用户
     int DeleteUserById(Long id);

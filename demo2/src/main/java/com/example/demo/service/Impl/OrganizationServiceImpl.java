@@ -7,8 +7,10 @@ import com.example.demo.service.OrganizationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -44,19 +46,23 @@ public class OrganizationServiceImpl implements OrganizationService {
     * @Date: 2021/2/25
     */
     @Override
-    public ModelAndView Login(String account, String password) {
+    public String Login(String account, String password, HttpSession session, RedirectAttributes redirectAttributes) {
         Organization organization = organizationMapper.Login(account,password);
-        ModelAndView mv = new ModelAndView();
+//        ModelAndView mv = new ModelAndView();
         //查询不到对象时
         if(organization == null){
-            mv.setViewName("login");
-            mv.addObject("error","账号或者密码错误，请确认后重试");
-            return mv;
+//            mv.setViewName("login");
+//            mv.addObject("error");
+              redirectAttributes.addFlashAttribute("errorInfo","账号或者密码错误，请确认后重试");
+            return "redirect:/login";
         }
         //进行参数传递
-        mv.addObject("organization",organization);
-        mv.setViewName("readercommunity");
-        return mv;
+        organization.setOrgPassword("");
+        session.setAttribute("org",organization);
+        session.setAttribute("userType","org");
+//        mv.addObject("org",organization);
+//        mv.setViewName("readercommunity");
+        return "redirect:/org/orgmanage";
     }
 
     /**
@@ -66,11 +72,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     * @Author: chenjiajun
     * @Date: 2021/2/25
     */
-    @Override
-    public int RegisterNewOrganization(String orgname, String orgpassword, String orgmail, String orgheadpic) {
-        Organization organizationTemp = new Organization(orgname,orgpassword,orgmail,orgheadpic);
-        return organizationMapper.insert(organizationTemp);
-    }
+//    @Override
+//    public int RegisterNewOrganization(String orgname, String orgpassword, String orgmail, String orgheadpic) {
+//        Organization organizationTemp = new Organization(orgname,orgpassword,orgmail,orgheadpic);
+//        return organizationMapper.insert(organizationTemp);
+//    }
 
     @Override
     public int DeleteOrganization(List<Organization> list) {

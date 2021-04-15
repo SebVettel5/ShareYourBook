@@ -1,0 +1,56 @@
+ 1 *{margin: 0;padding: 0}
+ 2 html,body{width: 100%}
+ 3 a{text-decoration: none;}
+ 4 /* input的类型为number时去掉小箭头 */
+ 5 input::-webkit-outer-spin-button,
+ 6 input::-webkit-inner-spin-button {
+ 7     -webkit-appearance: none;
+ 8 }
+ 9 input[type="number"]{
+10     -moz-appearance: textfield;
+11 }
+12 /* ----------------------end---------------------- */
+13 .c{margin: 0 auto;}
+14 .box{width: 1004px;height: 100px;margin-top: 30px;}
+15 .box .logo{width: 173px;height: 46px;background: url('../img/logo.gif') no-repeat;background-size: 100% 100%;}
+16 /* 页面导航 */
+17 .box ul {margin-top: 24px;height: 18px;width: 100%;}
+18 .box ul li{list-style: none;font-size: 16px;float: left;margin-right: 4px;}
+19 .box ul li a {color: #678cd9;}
+20 /* ----------------------end---------------------- */
+21 /* 支付流程 */
+22 .box .shopcat {width: 986px;height: 23px;border-radius: 6px;background:#e5e5e5;margin-top: 16px;}
+23 .box .shopcat div{float: left}
+24 .box .shopcat .shopcat1 {width:162px;height: 23px;line-height: 23px;text-indent: 2em;font-size: 16px;}
+25 .box .shopcat .shopcat2 {width: 44px;height: 23px;background: url('../img/taobao_bg.png') no-repeat}
+26 .box .shopcat .shopcat1:nth-child(1){width:204px;border-radius:6px;border-top-right-radius:0;border-bottom-right-radius:0;background: #ff6600;color:white;}
+27 .box .shopcat .shopcat2:nth-child(2){margin-left: -14px;width: 16px;}
+28 /* ----------------------end---------------------- */
+29 table{margin-bottom: 20px;}
+30 table tr{height: 63px;background: #e2f2ff;text-align: center;}
+31 table a {color: #678cd9; }
+32 table tr:nth-child(1){height: 44px;background: none;}
+33 table .hrs{height:4px;background: none;}
+34 .box .cutoff{width: 1000px;height: 4px;background: #b8c9e5;}
+35 table .shop{ height: 40px;text-align: left;text-indent: 2em;background:none;position: relative}
+36 table .shop span{margin-right:6px;}
+37 table .shop .vendor{width: 84px;height:26px;display: inline-block;background: url('../img/taobao_relation.jpg') no-repeat;position: absolute;}
+38 table .add{width: 14px;height: 14px;background: url('../img/taobao_adding.jpg') no-repeat;display: inline-block;background-size: 100% 100%;}
+39 table .nub {width: 30px;height: 14px;text-align: center}
+40 table .minus{width: 14px;height: 14px;background: url('../img/taobao_minus.jpg') no-repeat;display: inline-block;background-size: 100% 100%;}
+41 table .goods {width: 360px;padding: 8px;}
+42 table .goods img{float: left;}
+43 table .goods .img_r{float: left;text-align: left;width: 246px;margin-left: 10px;font-size: 12px;}
+44 table .goods .img_r p{font-size: 12px;line-height: 24px;margin-top: 16px;}
+45 table .goods .img_r p:nth-child(2){margin-top:0;}
+46 table .goods .img_r .p1{margin-top: 0;}
+47 table .goods .img_r .bz{width: 20px;height: 20px;display: inline-block;background: url('../img/taobao_icon_01.jpg') no-repeat;background-size:100% 100% }
+48 table .goods .img_r .rose{width: 20px;height: 20px;display: inline-block;background: url('../img/taobao_icon_02.jpg') no-repeat;background-size:100% 100% }
+49 table .last{background: none}
+50 table .last td{text-align: right;}
+51 table .last td:nth-child(1){text-align:left;}
+52 table .last td p:nth-child(1){margin-top: 10px;}
+53 table .last td p{line-height: 26px;}
+54 table .last td #zj{font-size:16px;color: #ff6300;margin-right:4px;margin-left: 4px;}
+55 table .last td #jf2{font-size:16px;color: #ff6300;margin-right:4px;margin-left: 4px;}
+56 /* ----------------------end---------------------- */

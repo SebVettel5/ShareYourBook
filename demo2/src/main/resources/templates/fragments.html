@@ -19,9 +19,15 @@
                         </li>
                         <li th:unless="not ${session.user}"><a class="icon solid fa-user"  href="personalpage"
                                th:text="'欢迎！ '+${session.user.userNickname}"><span>登录</span>1</a>
+                            <ul>
+                                <li><a href="javascript:void(0)" onclick="layout()">退出</a></li>
+                            </ul>
                         </li>
                         <li th:unless="not ${session.org}"><a class="icon solid fa-user"  href="personalpage"
                                th:text="'欢迎！ '+${session.org.orgName}"><span>登录</span>2</a>
+                            <ul>
+                                <li><a href="javascript:void(0)" onclick="layout()">退出</a></li>
+                            </ul>
                         </li>
                         <li>
                             <a href="#" class="icon fa-star"><span>更多</span></a>
@@ -59,5 +65,15 @@
             <script src="../static/js/util.js"></script>
             <script src="../static/js/main.js"></script>
         </div>
+        <script>
+            //注销登录方法
+            function layout() {
+                var result = confirm("确定要退出吗？");
+                if(result){
+                    // sessionStorage.clear();
+                    location.href="/layout";
+                }
+            }
+        </script>
 </body>
 </html>

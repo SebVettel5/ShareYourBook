@@ -90,7 +90,8 @@ public class UserController {
      */
     @RequestMapping("/UserRegister")
     public String UserRegister(Long phone,String username,String password,String email,
-                               Model model,RedirectAttributes redirectAttributes){
-        return  userServiceImpl.UserRegister(phone,username,password,email,model,redirectAttributes);
+                               Model model,RedirectAttributes redirectAttributes,
+                               HttpSession session){
+        return  userServiceImpl.UserRegister(phone,username,password,email,model,redirectAttributes,session);
     }
 }

@@ -31,5 +31,7 @@ public interface UserMapper extends BaseMapper<User> {
 
 
     User SelectUserByName(String userName);
+
+    User SelectUserByPhone(Long phone);
 }
 

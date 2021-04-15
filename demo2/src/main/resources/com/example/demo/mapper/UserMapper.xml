@@ -4,10 +4,10 @@
     <!-- Method: insert new User information into user table -->
     <insert id="NewUserRegister" parameterType="com.example.demo.domain.User" >
         Insert into users(
-            user_nickname,user_phone,user_password,user_email,
-            user_avatar,user_age,user_sex,) values(
+            user_nickname,user_phone,user_password,user_email
+           ) values(
             #{userNickname},#{userPhone},#{userPassword},
-            #{userEmail},#{userAvatar},#{userAge},#{userSex})
+            #{userEmail})
     </insert>
     <!-- Method: select user by phone and password in user table and return an user object-->
     <select id="Login"  resultType="com.example.demo.domain.User">
@@ -25,6 +25,14 @@
         from
             users
         where
-            user_name = #{userName}
+            user_nickname = #{userNickname}
+    </select>
+    <select id="SelectUserByPhone" parameterType="Long" resultType="com.example.demo.domain.User">
+        select
+            *
+        from
+            users
+        where
+            user_phone = #{phone}
     </select>
 </mapper>

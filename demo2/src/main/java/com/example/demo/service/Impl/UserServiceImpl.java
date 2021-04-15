@@ -47,8 +47,14 @@ public class UserServiceImpl implements UserService {
                                 @RequestParam String userpassword,
                                 String email,
                                 Model model,
-                                RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes,
+                                HttpSession session) {
         User u = new User(username,phone,email,userpassword);
+        //先验证是否存在该用户
+        if( userMapper.SelectUserByPhone(u.getUserPhone()) != null){
+            redirectAttributes.addFlashAttribute("errorInfo","注册失败，该用户已经存在，请联系管理员");
+            return "redirect:/login";
+        }
         //插入失败，捕获异常，进行异常处理，重定向到login
         try{
             userMapper.NewUserRegister(u);
@@ -61,8 +67,10 @@ public class UserServiceImpl implements UserService {
         //插入成功，直接跳转到readercommunity,并返回查询到的user对象
         u = userMapper.SelectUserByName(u.getUserNickname());
         u.setUserPassword("");
-        model.addAttribute("user",u);
-        return "readercommunity";
+        session.setAttribute("user",u);
+        session.setAttribute("userType","user");
+//        model.addAttribute("user",u);
+        return "redirect:/readercommunity";
     }
 
     //按id删除用户
@@ -103,6 +111,7 @@ public class UserServiceImpl implements UserService {
         u.setUserPassword("");
         //将用户对象和用户类型传入会话域中
         session.setAttribute("user",u);
+
         //这里使用userType来区分用户类别
         session.setAttribute("userType","user");
         return "redirect:/readercommunity";

@@ -4,10 +4,13 @@ import com.example.demo.domain.Organization;
 import com.example.demo.service.Impl.OrganizationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -41,10 +44,9 @@ public class OrganizationController {
     * @Author: chenjiajun
     * @Date: 2021/2/25
     */
-    @RequestMapping("/OrganizationLogin")
-    @ResponseBody
-    public ModelAndView OrgLogin(String account, String password){
-        return organizationServiceImpl.Login(account,password);
+    @PostMapping("/OrganizationLogin")
+    public String OrgLogin(String account, String password, HttpSession session, RedirectAttributes redirectAttributes){
+        return organizationServiceImpl.Login(account,password,session,redirectAttributes);
     }
 
     /**
@@ -54,11 +56,11 @@ public class OrganizationController {
     * @Author: chenjiajun
     * @Date: 2021/2/25
     */
-    @RequestMapping("/RegisterNewOrganization")
-    @ResponseBody
-    public int RegisterNewOrganization(String orgname,String orgpassword,String orgmail,String orgheadpic){
-        return organizationServiceImpl.RegisterNewOrganization(orgname,orgpassword,orgmail,orgheadpic);
-    }
+//    @RequestMapping("/RegisterNewOrganization")
+//    @ResponseBody
+//    public int RegisterNewOrganization(String orgname,String orgpassword,String orgmail,String orgheadpic){
+//        return organizationServiceImpl.RegisterNewOrganization(orgname,orgpassword,orgmail,orgheadpic);
+//    }
 
     /**
     * @Description: 批量删除组织用户

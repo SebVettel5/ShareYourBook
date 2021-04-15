@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>passed</title>
+    <link rel="stylesheet"  href="../../static/css/mystyle.css">
+    <script>
+
+    </script>
+</head>
+<body>
+<table class="my_table">
+    <thead  class="td_head">
+    <tr>
+        <td class="td_check"></td>
+        <td class="td_no">记录编号</td>
+        <td class="td_date">申请时间</td>
+        <td class="td_info">书籍信息</td>
+        <td class="td_caount">状态</td>
+        <td class="td_status">操作</td>
+    </tr>
+    </thead>
+    <tbody >
+    <tr th:each="record : ${records_list}" class="my_tr" >
+        <td><input type="checkbox"></td>
+        <td th:text="${record.recordsId}">1</td>
+        <td th:text="${record.createtime}">2000</td>
+        <td>
+            <div class="td_book_info">
+                <div class="book_img">
+                    <img th:src="@{${record.recordsBookCover}}" alt="">
+                </div>
+                <div class="book_info">
+                    <div th:text="'书名:'+${record.recordsBookName}" class="book_info_td">书名</div>
+                    <div th:text="'作者:'+${record.recordsBookAuthor}" class="book_info_td">作者</div>
+                    <div th:text="'语言:'+${record.recordsBookLanguage}" class="book_info_td">语言</div>
+                    <div th:text="'cip:'+${record.recordsBookCip}" class="book_info_td">cip</div>
+                    <div th:text="'出版社:'+${record.recordsBookPublisher}" class="book_info_td">出版社</div>
+                    <div th:text="'版次:'+${record.recordsBookEdition}" class="book_info_td">版次</div>
+                </div>
+            </div>
+        </td>
+        <td>
+            <div><span th:text="${record.recordsStatus}" class="tag is-info is-light">审核通过</span></div>
+            <div class="book_info">
+                <div th:text="'审核:'+${record.recordsOptAdminNickname}" >审核管理员</div>
+                <div th:text="'更新时间:'+${record.recordsUpdateDatetime}" class="book_info_td">更新时间</div>
+            </div>
+        </td>
+        <td>
+            <div><button class="button is-danger">撤销申请</button></div>
+            <br>
+            <div><button class="button is-success">一键上架</button></div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

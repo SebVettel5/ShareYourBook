@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>sharebook|uploadrecords</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../static/css/mystyle.css">
+    <link rel="stylesheet" href="../../static/css/main.css" />
+</head>
+<body class="personalpage is-preload">
+<div id="page-wrapper">
+
+    <!-- 页首部分 -->
+    <section id="header">
+        <div class="container">
+            <!-- Logo -->
+            <h1 id="title">图书上传申请记录</h1>
+            <!-- 导航栏 -->
+            <nav id="nav" th:replace="fragments :: nav"></nav>
+        </div>
+    </section>
+    <!-- 内容部分 -->
+    <section id="main">
+        <div class="container">
+            <div class="container">
+                <div class="columns">
+                    <div class="column"><a href="javascript:void(0)" onclick="load_page('checkinglist')"  style="color: #ffffff">正在审核</a></div>
+                    <div class="column"><a href="javascript:void(0)" onclick="load_page('passed')"  style="color: #ffffff">已通过</a></div>
+                    <div class="column"><a href="javascript:void(0)" onclick="load_page('refused')"  style="color: #ffffff">未通过</a></div>
+                    <div class="column"><a href="javascript:void(0)" onclick="load_page('allrecords')"  style="color: #ffffff">所有记录</a></div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div  id="show_page" style="height:60rem">
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚部分 -->
+    <section id="footer" th:replace="fragments :: foot"></section>
+</div>
+<div th:replace="fragments :: script"></div>
+<script type="text/javascript">
+    window.onload=function () {
+        load_page('checkinglist');
+    };
+    function load_page(page) {
+        document.getElementById("show_page").innerHTML='<object type="text/html" data="/org/'+page+'" width="100%" height="100%"></object>';
+    }
+</script>
+</body>
+</html>

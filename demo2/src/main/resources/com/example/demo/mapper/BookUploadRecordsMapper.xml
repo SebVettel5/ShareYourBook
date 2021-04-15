@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.BookUploadRecordsMapper">
+    <insert id="insertRecords" parameterType="com.example.demo.domain.BookUploadRecords" keyProperty="recordsId" useGeneratedKeys="true" >
+        insert into
+            bookuploadrecords(records_createtime,records_upload_org_id,records_upload_org_name,
+                                records_book_name,records_book_author,records_book_language,records_book_publisher,
+                                records_book_edition,records_book_cip,records_status,records_update_datetime)
+         values(#{recordsCreatetime},#{recordsUploadOrgId},#{recordsUploadOrgName},
+                #{recordsBookName},#{recordsBookAuthor},#{recordsBookLanguage},
+                #{recordsBookPublisher},#{recordsBookEdition},#{recordsBookCip},#{recordsStatus},#{recordsUpdateDatetime})
+    </insert>
+    <select id="selectRecords" resultType="com.example.demo.domain.BookUploadRecords">
+        select
+            *
+        from
+            bookuploadrecords
+        where
+            records_createtime = #{recordsCreateTime}
+        and
+            records_book_name = #{recordsBookName}
+        and
+            records_upload_org_id = #{orgId}
+    </select>
+    <select id="selectOrgUploadRecordsByStatus" resultType="com.example.demo.domain.BookUploadRecords">
+        select
+            *
+        from
+            bookuploadrecords
+        where
+            records_upload_org_id = #{orgid}
+        and
+            records_status = #{status}
+    </select>
+</mapper>

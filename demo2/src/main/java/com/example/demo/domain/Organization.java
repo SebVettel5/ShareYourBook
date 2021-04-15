@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import lombok.Data;
+
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -8,81 +10,25 @@ import javax.persistence.Table;
  * @description：机构实体类
  * @date ：2021/2/1 16:35
  */
-@Table(name="organization")
+@Data
+@Table(name="organizations")
 public class Organization {
-    @Id
-    private Integer OrganizationId;
-    private String OrganizationName;
-    private String OrganizationPassword;
-    private String OrganizationEmail;
-    private String OrganizationHeadPic;//头像路径
-    private Integer OrganizationLevel;
+  @Id
+  private Long orgId;
+  private String orgName;
+  private String orgPassword;
+  private String orgEmail;
+  private String orgAvatar;
+  private Long orgAuthenticationId;
+  private Long orgFansCount;
 
-    //全参构造函数
-
-
-    public Organization(Integer organizationId, String organizationName, String organizationPassword, String organizationEmail, String organizationHeadPic, Integer organizationLevel) {
-        OrganizationId = organizationId;
-        OrganizationName = organizationName;
-        OrganizationPassword = organizationPassword;
-        OrganizationEmail = organizationEmail;
-        OrganizationHeadPic = organizationHeadPic;
-        OrganizationLevel = organizationLevel;
-    }
-
-    //除id,等级外的构造函数，用于添加的时候临时构建对象
-    public Organization(String organizationName, String organizationPassword, String organizationEmail, String organizationHeadPic) {
-        OrganizationName = organizationName;
-        OrganizationPassword = organizationPassword;
-        OrganizationEmail = organizationEmail;
-        OrganizationHeadPic = organizationHeadPic;
-    }
-
-    public Integer getOrganizationId() {
-        return OrganizationId;
-    }
-
-    public void setOrganizationId(Integer organizationId) {
-        OrganizationId = organizationId;
-    }
-
-    public String getOrganizationName() {
-        return OrganizationName;
-    }
-
-    public void setOrganizationName(String organizationName) {
-        OrganizationName = organizationName;
-    }
-
-    public String getOrganizationPassword() {
-        return OrganizationPassword;
-    }
-
-    public void setOrganizationPassword(String organizationPassword) {
-        OrganizationPassword = organizationPassword;
-    }
-
-    public String getOrganizationEmail() {
-        return OrganizationEmail;
-    }
-
-    public void setOrganizationEmail(String organizationEmail) {
-        OrganizationEmail = organizationEmail;
-    }
-
-    public String getOrganizationHeadPic() {
-        return OrganizationHeadPic;
-    }
-
-    public void setOrganizationHeadPic(String organizationHeadPic) {
-        OrganizationHeadPic = organizationHeadPic;
-    }
-
-    public Integer getOrganizationLevel() {
-        return OrganizationLevel;
-    }
-
-    public void setOrganizationLevel(Integer organizationLevel) {
-        OrganizationLevel = organizationLevel;
+    public Organization(Long orgId, String orgName, String orgPassword, String orgEmail, String orgAvatar, Long orgAuthenticationId, Long orgFansCount) {
+        this.orgId = orgId;
+        this.orgName = orgName;
+        this.orgPassword = orgPassword;
+        this.orgEmail = orgEmail;
+        this.orgAvatar = orgAvatar;
+        this.orgAuthenticationId = orgAuthenticationId;
+        this.orgFansCount = orgFansCount;
     }
 }

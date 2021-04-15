@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
  * @description：登录拦截器
  * @date ：2021/3/20 17:57
  */
-@Component
+//@Component
 //注入到spring容器中
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
@@ -31,10 +31,10 @@ public class LoginInterceptor implements HandlerInterceptor {
             if ( u == null && administrator == null && organization == null){
                 response.sendRedirect("login");
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
-        return false;
+        //return true表示当前条件符合，不进行拦截，false进行拦截
+        return true;
     }
 }

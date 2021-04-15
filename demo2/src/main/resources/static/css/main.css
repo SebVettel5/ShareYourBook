@@ -24,8 +24,9 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;}
 
-body {
+body,html{
 	line-height: 1;
+    height: 100%;
 }
 
 ol, ul {
@@ -62,9 +63,9 @@ input::-moz-focus-inner {
 
 input, select, textarea {
 	-moz-appearance: none;
-	-webkit-appearance: none;
+	/*-webkit-appearance: none;*/
 	-ms-appearance: none;
-	appearance: none;
+	/*appearance: none;*/
 }
 
 /* Basic */
@@ -308,9 +309,12 @@ input, select, textarea {
 		}
 
 		.row > .col-4 {
-			width: 33.33333%;
+			width: 30%;
 		}
 
+.row > .col-41 {
+    width: 20%;
+}
 		.row > .off-4 {
 			margin-left: 33.33333%;
 		}
@@ -340,11 +344,11 @@ input, select, textarea {
 		}
 
 		.row > .col-8 {
-			width: 66.66667%;
+			width: 80%;
 		}
 
 		.row > .off-8 {
-			margin-left: 66.66667%;
+			margin-left: 80%;
 		}
 
 		.row > .col-9 {
@@ -1650,7 +1654,7 @@ input, select, textarea {
 
 /* Form */
 
-	form label {
+	/*form label {
 		font-weight: 600;
 		text-transform: uppercase;
 		color: #888;
@@ -1684,7 +1688,7 @@ input, select, textarea {
 		form select:focus,
 		form textarea:focus {
 			background: #f0f0f0;
-		}
+		}*/
 
 	form textarea {
 		min-height: 11em;
@@ -1737,7 +1741,7 @@ input, select, textarea {
 
 		table thead {
 			background: #878787;
-			color: #fff;
+			/*color: #fff;*/
 			font-weight: 400;
 			text-transform: uppercase;
 			border: 0;

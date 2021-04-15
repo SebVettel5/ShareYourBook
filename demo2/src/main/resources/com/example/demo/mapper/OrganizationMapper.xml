@@ -6,7 +6,7 @@
         select
             *
         from
-            organization
+            organizations
         where
             org_id = #{account}  and  org_password = #{password}
     </select>
