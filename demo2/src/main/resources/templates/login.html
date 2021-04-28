@@ -35,15 +35,17 @@
                     // alert(context.length);
                     switch(context.length){
                         case 11:alert("读者");break;
-                        case 9:alert("机构-----我们将向您的密保邮箱发送一封验证码，注意查收");
+                        case 9:
+                            // alert("机构-----我们将向您的密保邮箱发送一封验证码，注意查收");
                             loginform.action="/OrganizationLogin";
-                            checkinputdiv.style.display ="block";
-                            checkinput.required="required";
+                            // checkinputdiv.style.display ="block";
+                            // checkinput.required="required";
                             break;
-                        case 5:alert("管理员-----我们将向您的密保邮箱发送一封验证码，注意查收");
+                        case 5:
+                            // alert("管理员-----我们将向您的密保邮箱发送一封验证码，注意查收");
                             loginform.action="/AdministratorLogin";
-                            checkinputdiv.style.display ="block";
-                            checkinput.required="required";
+                            // checkinputdiv.style.display ="block";
+                            // checkinput.required="required";
                             break;
                         default:alert("错误");break;
                     }

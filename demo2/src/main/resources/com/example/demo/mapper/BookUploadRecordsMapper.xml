@@ -31,5 +31,44 @@
             records_upload_org_id = #{orgid}
         and
             records_status = #{status}
+        and
+            records_data_status = #{dataStatus}
     </select>
+    <update id="deleteById" >
+        update
+            bookuploadrecords
+        set
+            records_data_status = #{status},
+            records_update_datetime = #{date},
+            records_opt_admin_nickname = #{optioner}
+        where
+            records_id = #{recordsId}
+    </update>
+    <select id="selectOneById" resultType="com.example.demo.domain.BookUploadRecords">
+        select
+            *
+        from
+            bookuploadrecords
+        where  records_id = #{recordsId}
+    </select>
+    <select id="selectAllByStatus" resultType="com.example.demo.domain.BookUploadRecords">
+        select
+            *
+        from
+            bookuploadrecords
+        where
+            records_upload_org_id = #{orgid}
+        and
+            records_data_status = #{dataStatus}
+    </select>
+    <update id="withdrawById">
+        update
+            bookuploadrecords
+        set
+            records_status = #{status},
+            records_update_datetime = #{date},
+            records_opt_admin_nickname = #{optioner}
+        where
+            records_id = #{recordsId}
+    </update>
 </mapper>

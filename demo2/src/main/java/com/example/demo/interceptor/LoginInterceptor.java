@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
  * @description：登录拦截器
  * @date ：2021/3/20 17:57
  */
-//@Component
+@Component
 //注入到spring容器中
 public class LoginInterceptor implements HandlerInterceptor {
     @Override

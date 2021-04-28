@@ -12,7 +12,7 @@
     <artifactId>demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>demo</name>
-    <description>Demo project for Spring Boot</description>
+    <description>The ShareBook Project</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -71,12 +71,12 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter</artifactId>-->
+<!--            <version>RELEASE</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
         <!-- 我的SpringBoot 版本为  2.1.5.RELEASE -->
         <dependency>
@@ -101,7 +101,17 @@
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.7</version>
+            <version>1.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.1.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>3.1</version>
         </dependency>
 
 

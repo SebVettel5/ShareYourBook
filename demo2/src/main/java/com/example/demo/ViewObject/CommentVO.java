@@ -1,5 +1,6 @@
 package com.example.demo.ViewObject;
 
+import com.github.pagehelper.PageInfo;
 import lombok.Data;
 
 import java.util.List;
@@ -16,10 +17,13 @@ public class CommentVO<T> {
     private Long count;
     private List<T> res;
 
+
     public CommentVO(Integer code, String msg, Long count, List<T> res) {
         this.code = code;
         this.msg = msg;
         this.count = count;
         this.res = res;
     }
+
+
 }

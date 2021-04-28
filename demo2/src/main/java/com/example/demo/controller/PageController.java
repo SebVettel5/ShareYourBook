@@ -66,7 +66,7 @@ public class PageController {
         return "servicestatement";
     }
 
-    @RequestMapping("/uploadbook")
+    @RequestMapping("/org/uploadbookpage")
     public String UploadBook(){
         return "uploadbook";
     }
@@ -118,5 +118,9 @@ public class PageController {
         return "org/uploadrecords";
     }
 
+    @RequestMapping("/org/allrecords")
+    public String orgAllrecords(){
+        return "org/allrecords";
+    }
 
 }

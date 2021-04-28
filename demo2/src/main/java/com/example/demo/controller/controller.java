@@ -95,81 +95,58 @@ public class controller {
         return "redirect:/homepage";
     }
 
-    /**
-    * @Description: 上传图书申请的服务测试
-    * @Param: [bookName, publisher, author, edition, cip, language, avart]
-    * @return: com.example.demo.domain.BookUploadRecords
-    * @Author: chenjiajun
-    * @Date: 2021/4/13
-    */
-    @PostMapping("/uploadTest")
-    @ResponseBody
-    public BookUploadRecords uploadTest(@RequestParam(value = "bookName") String bookName,
-                                 @RequestParam(value = "publisher") String publisher,
-                                 @RequestParam(value = "author") String author,
-                                 @RequestParam(value = "edition") String edition,
-                                 @RequestParam(value = "cip") String cip,
-                                 @RequestParam(value = "language") String language,
-                                 @RequestParam(value = "avart") MultipartFile avart) throws FileNotFoundException {
-        //参数
-        Long orgid = 100000003L;
-        String orgname = "时代云图";
-        Date date = new Date();
-        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
-        dateFormat.format(date);
-        BookUploadRecords bupr = new BookUploadRecords(date,orgid,orgname,bookName,author,language,publisher,edition,cip,"审核中",date);
-//        System.out.println(bupr.getRecordsCreatetime());
-        //先插入不带图的记录
-        //再按照获取的id给图片重新命名再修改记录
-        bupr = recordsService.uploadRecords(bupr);
 
-        //获取图片文件
-        if (!avart.isEmpty()){
-            try {
-                BufferedOutputStream outputStream = new BufferedOutputStream(
-                        new FileOutputStream( new File("E:\\localImg\\"+bupr.getRecordsId().toString()+".jpg")));//图片保存路径，暂时用本地路径来进行演示
-                outputStream.write(avart.getBytes());
-                outputStream.flush();
-                outputStream.close();
-                bupr.setRecordsBookCover(bupr.getRecordsId().toString()+".jpg");
-                recordsService.updateUploadRecords(bupr);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return bupr;
-    }
 
-    @GetMapping("/getUploadTest")
+//    @GetMapping("/getUploadTest")
+////    @ResponseBody
+//    public String getUploadTest(Model model) throws IOException{
+//        //获取所有的上传记录
+//        List<BookUploadRecords> list = recordsService.getAllUploadRecords();
+//        //d对所有记录的对象中的图片的路径进行重新匹配，将得到的图片转换成二进制数组传回
+//        //将返回给前端的数据用map封装起来
+////        Map<BookUploadRecords,String> map = new HashMap<>();
+////        List<Map> result = new ArrayList<>();
+////        List<String> imgByte = new ArrayList<>();
+//
+//        for (BookUploadRecords records : list) {
+//            //拼接图片保存的路径以获取到本地的存储路径
+//            String imgsrc = "/localImg/"+records.getRecordsBookCover();
+////            FileInputStream fileInputStream = new FileInputStream(imgsrc);
+////            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+////            byte[] b = new byte[1024];
+////            int len = -1;
+////            while((len = fileInputStream.read(b)) != -1) {
+////                bos.write(b, 0, len);
+////            }
+////            byte[] fileByte = bos.toByteArray();
+////            BASE64Encoder encoder = new BASE64Encoder();
+////            String data = encoder.encode(fileByte);
+////            map.put(records,data);
+//            records.setRecordsBookCover(imgsrc);
+//        }
+////        result.add(map);
+////        model.addAttribute("result",list);
+//          model.addAttribute("records_list",list);
+//        return "org/uploadrecords";
+//    }
+
+    @PostMapping("/org/posttest")
 //    @ResponseBody
-    public String getUploadTest(Model model) throws IOException{
-        //获取所有的上传记录
-        List<BookUploadRecords> list = recordsService.getAllUploadRecords();
-        //d对所有记录的对象中的图片的路径进行重新匹配，将得到的图片转换成二进制数组传回
-        //将返回给前端的数据用map封装起来
-//        Map<BookUploadRecords,String> map = new HashMap<>();
-//        List<Map> result = new ArrayList<>();
-//        List<String> imgByte = new ArrayList<>();
+    public String postTest(Model model,@RequestParam String recordId){
 
-        for (BookUploadRecords records : list) {
-            //拼接图片保存的路径以获取到本地的存储路径
-            String imgsrc = "/localImg/"+records.getRecordsBookCover();
-//            FileInputStream fileInputStream = new FileInputStream(imgsrc);
-//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//            byte[] b = new byte[1024];
-//            int len = -1;
-//            while((len = fileInputStream.read(b)) != -1) {
-//                bos.write(b, 0, len);
-//            }
-//            byte[] fileByte = bos.toByteArray();
-//            BASE64Encoder encoder = new BASE64Encoder();
-//            String data = encoder.encode(fileByte);
-//            map.put(records,data);
-            records.setRecordsBookCover(imgsrc);
-        }
-//        result.add(map);
-//        model.addAttribute("result",list);
-          model.addAttribute("records_list",list);
-        return "org/uploadrecords";
+        return recordId;
     }
+
+//    /***
+//    * @Description: 测试获取所有上传申请记录
+//    * @Param: []
+//    * @return: java.util.List<com.example.demo.domain.BookUploadRecords>
+//    * @Author: chenjiajun
+//    * @Date: 2021/4/19
+//    */
+//    @RequestMapping("/mydatatest")
+//    @ResponseBody
+//    public List<BookUploadRecords> maydatatest(){
+//        return recordsService.getAllUploadRecords();
+//    }
 }

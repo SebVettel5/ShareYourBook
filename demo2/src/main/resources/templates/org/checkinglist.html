@@ -2,8 +2,12 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>allrecords</title>
+    <title>checkinglist</title>
     <link rel="stylesheet"  href="../../static/css/mystyle.css">
+    <link rel="stylesheet" href="../../static/css/table.css">
+    <script src="../../static/js/jquery.min.js"></script>
+<!--    <link rel="stylesheet" href="../../static/css/layui.css">-->
+    <script type="text/javascript" src="../../static/layer/layer.js"></script>
 </head>
 <body>
 <table class="my_table">
@@ -18,14 +22,14 @@
     </tr>
     </thead>
     <tbody >
-    <tr th:each="record : ${records_list}" class="my_tr" >
-        <td><input type="checkbox"></td>
+    <tr th:each="record : ${result.list}" class="my_tr" >
+        <td><input type="checkbox" name="check"></td>
         <td th:text="${record.recordsId}">1</td>
-        <td th:text="${record.createtime}">2000</td>
+        <td th:text="${#dates.format(record.recordsCreatetime,'yyyy-MM-dd HH:mm:ss')}">2000</td>
         <td>
             <div class="td_book_info">
                 <div class="book_img">
-                    <img th:src="@{${record.recordsBookCover}}" alt="">
+                    <img th:src="@{${record.recordsBookCover}}" alt="" class="my_img">
                 </div>
                 <div class="book_info">
                     <div th:text="'书名:'+${record.recordsBookName}" class="book_info_td">书名</div>
@@ -38,13 +42,129 @@
             </div>
         </td>
         <td><span th:text="${record.recordsStatus}" class="tag is-info is-light">审核中</span></td>
-        <td>
-            <div> <button class="button is-danger">撤销申请</button></div>
+        <td >
+            <div> <button class="button is-danger" th:onclick="'javascript:withdraw('+${record.recordsId}+')'">撤销申请</button></div>
             <br>
-            <div>  <button class="button is-warning">修改信息</button></div>
+            <div>
+                <button class="button is-warning" th:onclick="javascript:modification([[${record}]])">
+<!--                <button class="button is-warning"-->
+<!--&lt;!&ndash;                        th:attr="data-recordId=${record.recordId},data-bookName=${record.recordsBookName},data-author=${record.recordsBookAuthor},data-language=${record.recordsBookLanguage}"&ndash;&gt;-->
+<!--                        th:onclick="javascript:modification(this)">-->
+                修改信息</button></div>
         </td>
     </tr>
     </tbody>
+    <tfoot>
+        <tr style="background-color:   #ffffe5">
+            <td><input type="checkbox" class="checkbox"></td>
+            <td>
+                <div style="display: flex;font-size: medium;">
+                    <div style="padding-top: 2%">全选</div>
+                    <button class="button is-danger" style="margin-left: 10%"  th:onclick="javascript:updateAll()">批量撤销</button>
+                </div>
+            </td>
+            <td colspan="4">
+                <div >
+                    <ul class="pagination pull-right no-margin">
+                        <!-- 首页 -->
+                        <li>
+                            <a th:href="'/org/getData?pageNum=1&status=checkinglist'">首页</a>
+                        </li>
+                        <!-- 上一页 -->
+                        <li th:if="${result.hasPreviousPage}">
+                            <a th:href="'/org/getData?pageNum=' + ${result.prePage}+'&status=checkinglist'" th:text="上一页"></a>
+                        </li>
+                        <!-- 中间页 -->
+                        <li th:each="pages:${result.navigatepageNums}">
+                            <a th:href="'/org/getData?pageNum=' + ${pages}+'&status=checkinglist'" th:text="${pages}" ></a>
+<!--                            <a th:href="'/org/checkinglist?pageNum=' + ${pages}" th:text="${pages}" th:if="${pages eq pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
+                        </li>
+                        <!-- 下一页 -->
+                        <li th:if="${result.hasNextPage}">
+                            <a th:href="'/org/getData?pageNum=' + ${result.nextPage}+'&status=checkinglist'" th:text="下一页"></a>
+                        </li>
+                        <!-- 尾页 -->
+                        <li>
+                            <a th:href="'/org/getData?pageNum=' + ${result.size}+'&status=checkinglist'">尾页</a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </tfoot>
 </table>
+<!--分页信息-->
+
 </body>
+<script type="text/javascript">
+    //单条数据撤销申请
+    function withdraw(recordId) {
+        layer.confirm('确定要撤销申请吗？',{
+            btn:['确认','取消']
+        },function () {
+            //确认后进行操作
+            var data = [];
+            // data.push(status);
+            data.push("已撤销");
+            data.push(recordId);
+            processingData(data);
+        },function () {
+            
+        })
+    }
+    //以AJAX方式将获取的recordsID数组批量回传到服务端
+    function updateAll() {
+        //获取已经选择的checkbox条数据
+        var arr = [];
+        //设置这些记录查看状态为false
+        // arr.push(status);
+        arr.push("已撤销");
+        //组织数据，选中所有的被选中的数据的id
+        $("input[name='check']:checked").each(function (i) {
+            let val = $(this).parents("tr").find("td").eq(1).text();
+            arr.push($.trim(val));
+        })
+        console.log(arr);
+        //将数据传输到后台
+        processingData(arr);
+    }
+    //单条数据的修改申请
+    function modification(obj) {
+        var url = "/org/modification?recordsId="+obj.recordsId;
+        // alert(url);
+        layer.open({
+            type:2,
+            title:"修改申请信息",
+            area:['50%', '50%'],
+            content:url,
+            // btn:['提交','取消'],
+            // yes:function(layero, index){
+            //     // var body = layero.getChildFrame('body',index);
+            //     // var iframeWin = window[layero.find('modification')[0]['name']];
+            //     // alert(body.find('#bookname').val("1"));
+            //     alert("提交成功！");
+            // },
+            success:function () {
+            }
+        })
+    }
+
+    function processingData(data) {
+        $.ajax({
+            type:'post',
+            url:'/org/changeUploadRecordsStatus',
+            contentType:"application/json",
+            data:JSON.stringify(data),
+            success:function (message) {
+                layer.msg(message,{
+                    time:3000,
+                    btn:['确认']
+                },function () {
+                    location.reload(true);
+                    // location.replace("/org/checkinglist?pageNum=1");
+                })
+            }
+        })
+    }
+</script>
 </html>

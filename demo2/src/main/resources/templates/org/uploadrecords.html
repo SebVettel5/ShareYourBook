@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>sharebook|uploadrecords</title>
     <meta charset="utf-8" />
@@ -9,6 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../../static/css/mystyle.css">
     <link rel="stylesheet" href="../../static/css/main.css" />
+    <link rel="stylesheet" href="../../static/css/table.css">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../static/layer/layer.js"></script>
 </head>
 <body class="personalpage is-preload">
 <div id="page-wrapper">
@@ -27,15 +30,105 @@
         <div class="container">
             <div class="container">
                 <div class="columns">
-                    <div class="column"><a href="javascript:void(0)" onclick="load_page('checkinglist')"  style="color: #ffffff">正在审核</a></div>
-                    <div class="column"><a href="javascript:void(0)" onclick="load_page('passed')"  style="color: #ffffff">已通过</a></div>
-                    <div class="column"><a href="javascript:void(0)" onclick="load_page('refused')"  style="color: #ffffff">未通过</a></div>
-                    <div class="column"><a href="javascript:void(0)" onclick="load_page('allrecords')"  style="color: #ffffff">所有记录</a></div>
+                    <div class="column"><a href="/org/uploadrecords?listType=checkingList&pageNum=1"  style="color: #ffffff">正在审核</a></div>
+                    <div class="column"><a href="/org/uploadrecords?listType=passedList&pageNum=1"  style="color: #ffffff">已通过</a></div>
+                    <div class="column"><a href="/org/uploadrecords?listType=refusedList&pageNum=1"  style="color: #ffffff">未通过</a></div>
+                    <div class="column"><a href="/org/getAllBookUploadRecords?listType=allRecordsList&pageNum=1"  style="color: #ffffff">所有记录</a></div>
                 </div>
             </div>
             <div class="line"></div>
-            <div  id="show_page" style="height:60rem">
+            <div>
+                <table class="my_table">
+                    <thead  class="td_head">
+                    <tr>
+                        <td class="td_check"></td>
+                        <td class="td_no">记录编号</td>
+                        <td class="td_date">申请时间</td>
+                        <td class="td_info">书籍信息</td>
+                        <td class="td_caount">状态</td>
+                        <td class="td_status">操作</td>
+                    </tr>
+                    </thead>
+                    <tbody >
+                    <tr th:each="record : ${result.list}" class="my_tr" >
+                        <td><input type="checkbox" name="check"></td>
+                        <td th:text="${record.recordsId}">1</td>
+                        <td th:text="${#dates.format(record.recordsCreatetime,'yyyy-MM-dd HH:mm:ss')}">2000</td>
+                        <td>
+                            <div class="td_book_info">
+                                <div class="book_img">
+                                    <img th:src="@{${record.recordsBookCover}}" alt="" class="my_img">
+                                </div>
+                                <div class="book_info">
+                                    <div th:text="'书名:'+${record.recordsBookName}" class="book_info_td">书名</div>
+                                    <div th:text="'作者:'+${record.recordsBookAuthor}" class="book_info_td">作者</div>
+                                    <div th:text="'语言:'+${record.recordsBookLanguage}" class="book_info_td">语言</div>
+                                    <div th:text="'cip:'+${record.recordsBookCip}" class="book_info_td">cip</div>
+                                    <div th:text="'出版社:'+${record.recordsBookPublisher}" class="book_info_td">出版社</div>
+                                    <div th:text="'版次:'+${record.recordsBookEdition}" class="book_info_td">版次</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span th:text="${record.recordsStatus}" class="tag is-info is-light">审核中</span>
+                            <div style="text-align: left;margin-top: 2%" th:if="${listType} eq 'refusedList' or ${listType} eq 'passedList'">
+                                <div>审核人员：</div>
+                                <div th:text="${record.recordsOptAdminNickname}" >审核</div>
+                                <div>记录更新时间：</div>
+                                <div th:text="${#dates.format(record.recordsUpdateDatetime,'yyyy-MM-dd HH:mm:ss')}">更新时间</div>
+                                <!--                <div th:text="'更新时间:'+${record.recordsUpdateDatetime}" class="book_info_td">拒绝原因</div>-->
+                            </div>
+                        </td>
+                        <td >
+                            <div> <button class="button is-danger" th:onclick="'javascript:withdraw('+${record.recordsId}+')'">撤销申请</button></div>
+                            <br>
+                            <div><button class="button is-warning" th:if="${listType} eq 'checkingList'" th:onclick="javascript:modification([[${record}]])">修改信息</button></div>
+                            <br>
+                            <div><button class="button is-success" th:if="${listType} eq 'passedList'"><a href="/org/putaway" style="color: white">去 上 架</a></button></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr style="background-color:#ffffe5;">
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td >
+                            <div style="display: flex;">
+                                <div style="width: 20%">全选</div>
+                                <button class="button is-danger" style="margin-left: 10%"  th:onclick="javascript:updateAll()">批量撤销</button>
+                            </div>
+                        </td>
+                        <td colspan="4">
+                            <div >
+                                <ul class="pagination pull-right no-margin">
+                                    <!-- 首页 -->
+                                    <li>
+                                        <a th:href="'/org/getData?pageNum=1&status=checkinglist'">首页</a>
+                                    </li>
+                                    <!-- 上一页 -->
+                                    <li th:if="${result.hasPreviousPage}">
+                                        <a th:href="'/org/getData?pageNum=' + ${result.prePage}+'&status=checkinglist'" th:text="上一页"></a>
+                                    </li>
+                                    <!-- 中间页 -->
+                                    <li th:each="pages:${result.navigatepageNums}">
+                                        <a th:href="'/org/getData?pageNum=' + ${pages}+'&status=checkinglist'" th:text="${pages}" ></a>
+                                        <!--                            <a th:href="'/org/checkinglist?pageNum=' + ${pages}" th:text="${pages}" th:if="${pages eq pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
+                                    </li>
+                                    <!-- 下一页 -->
+                                    <li th:if="${result.hasNextPage}">
+                                        <a th:href="'/org/getData?pageNum=' + ${result.nextPage}+'&status=checkinglist'" th:text="下一页"></a>
+                                    </li>
+                                    <!-- 尾页 -->
+                                    <li>
+                                        <a th:href="'/org/getData?pageNum=' + ${result.size}+'&status=checkinglist'">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
             </div>
+
+
         </div>
     </section>
 
@@ -44,11 +137,84 @@
 </div>
 <div th:replace="fragments :: script"></div>
 <script type="text/javascript">
-    window.onload=function () {
-        load_page('checkinglist');
-    };
-    function load_page(page) {
-        document.getElementById("show_page").innerHTML='<object type="text/html" data="/org/'+page+'" width="100%" height="100%"></object>';
+    // window.onload=function () {
+    //     load_page('checkinglist');
+    // };
+    // function load_page(statu) {
+    //     if(statu === "allrecords")
+    //         document.getElementById("show_page").innerHTML='<object type="text/html" data="/org/getAllBookUploadRecords?pageNum=1" width="100%" height="100%" th:inline="none"></object>';
+    //     else
+    //         document.getElementById("show_page").innerHTML='<object type="text/html" data="/org/getData?pageNum=1&status='+statu+'" width="100%" height="100%"></object>';
+    // }
+
+    //实现删除和撤销部分
+    //单条数据撤销申请
+    function withdraw(recordId,status) {
+        layer.confirm('确定要删除记录吗？注意，删除后不可恢复！',{
+            btn:['确认','取消']
+        },function () {
+            //确认后进行操作
+            var data = [];
+            data.push(status);
+            data.push(recordId);
+            processingData(data);
+        },function () {
+
+        })
+    }
+    //以AJAX方式将获取的recordsID数组批量回传到服务端
+    function updateAll(status) {
+        //获取已经选择的checkbox条数据
+        var arr = [];
+        //设置这些记录查看状态为false
+        arr.push(status);
+        //组织数据，选中所有的被选中的数据的id
+        $("input[name='check']:checked").each(function (i) {
+            let val = $(this).parents("tr").find("td").eq(1).text();
+            arr.push($.trim(val));
+        })
+        console.log(arr);
+        //将数据传输到后台
+        processingData(arr);
+    }
+
+    function processingData(data) {
+        $.ajax({
+            type:'post',
+            url:'/org/changeUploadRecords',
+            contentType:"application/json",
+            data:JSON.stringify(data),
+            success:function (message) {
+                layer.msg(message,{
+                    time:3000,
+                    btn:['确认']
+                },function () {
+                    location.reload(true);
+                    // location.replace("/org/checkinglist?pageNum=1");
+                })
+            }
+        })
+    }
+
+    //单条数据的修改申请
+    function modification(obj) {
+        var url = "/org/modification?recordsId="+obj.recordsId;
+        // alert(url);
+        layer.open({
+            type:2,
+            title:"修改申请信息",
+            area:['50%', '50%'],
+            content:url,
+            // btn:['提交','取消'],
+            // yes:function(layero, index){
+            //     // var body = layero.getChildFrame('body',index);
+            //     // var iframeWin = window[layero.find('modification')[0]['name']];
+            //     // alert(body.find('#bookname').val("1"));
+            //     alert("提交成功！");
+            // },
+            success:function () {
+            }
+        })
     }
 </script>
 </body>

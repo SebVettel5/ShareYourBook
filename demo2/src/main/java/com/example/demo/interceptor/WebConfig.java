@@ -13,16 +13,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    //登录拦截部分
-//    @Autowired
-//    private LoginInterceptor loginInterceptor;
+//    登录拦截部分
+    @Autowired
+    private LoginInterceptor loginInterceptor;
 
 //    @Override
 //    public void addInterceptors(InterceptorRegistry registry) {
 //            registry.addInterceptor(loginInterceptor)
 //            //此处添加需要拦截的路径，为便于开发，暂时不进行相关操作
-////                    .addPathPatterns("/personalpage")
-////                    .addPathPatterns("/uploadbook")
+//                    .addPathPatterns("/personalpage")
+//                    .addPathPatterns("/org/uploadbookpage")
+////                    .addPathPatterns("/org/*")
 //                    ;
 //    }
 

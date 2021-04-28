@@ -60,7 +60,10 @@ video {
 
 img {
     height: auto;
-    max-width: 100%;
+    max-width: 80%;
+    max-height: 75%;
+    margin-left: 15%;
+    margin-top: 15%;
 }
 
 .content figure img {
@@ -69,8 +72,8 @@ img {
 
 .image img {
     display: block;
-    height: auto;
-    width: 100%;
+    max-height: 80%;
+    max-width: 75%;
 }
 
 .image img.is-rounded {
@@ -1736,8 +1739,9 @@ fieldset[disabled] .select select:hover {
     height: 0.5rem;
     background-color: #D0D0D0;
     border-radius: 0.5rem;
-    margin-left: 1%;
+    /*margin-left: 1%;*/
     margin-top: 1%;
+    margin-bottom: 1%;
 }
 /*my table */
 .my_table{
@@ -1774,6 +1778,7 @@ fieldset[disabled] .select select:hover {
     width: 50%;
     vertical-align: middle;
 }
+
 .my_tr{
     background-color:  #ffe6cc;
     /*height: 150px;*/
@@ -1798,8 +1803,8 @@ fieldset[disabled] .select select:hover {
     border-radius: 4px;
     box-shadow: none;
     display: inline-flex;
-    font-size: 1rem;
-    height: 2.5em;
+    /*font-size: 1rem;*/
+    /*height: 2.5em;*/
     justify-content: flex-start;
     line-height: 1.5;
     padding-bottom: calc(0.5em - 1px);
@@ -2299,3 +2304,5 @@ span {
     font-style: inherit;
     font-weight: inherit;
 }
+
+

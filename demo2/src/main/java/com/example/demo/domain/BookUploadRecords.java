@@ -31,10 +31,33 @@ public class BookUploadRecords {
     private String recordsStatus;
     private Date recordsUpdateDatetime;
     private Long recordsBookId;
-    //将数据库查询出来的时间戳转换成字符串返回给前端
-    private String createtime;
+    private Boolean recordsDataStatus;
 
     //构造函数
+
+
+    public void resSetBookUploadRecords(String recordsBookName, String recordsBookAuthor, String recordsBookLanguage, String recordsBookPublisher, String recordsBookEdition, String recordsBookCip,String recordsBookCover,Date date) {
+        this.setRecordsBookName(recordsBookName);
+        this.setRecordsBookAuthor(recordsBookAuthor);
+        this.setRecordsBookCip(recordsBookCip);
+        this.setRecordsBookLanguage(recordsBookLanguage);
+        this.setRecordsBookPublisher(recordsBookPublisher);
+        this.setRecordsBookEdition(recordsBookEdition);
+        if(!recordsBookCover.equals(""))
+             this.setRecordsBookCover(recordsBookCover);
+        this.setRecordsCreatetime(date);
+    }
+
+    public BookUploadRecords(Long recordsId, String recordsBookName, String recordsBookAuthor, String recordsBookLanguage, String recordsBookPublisher, String recordsBookEdition, String recordsBookCover, String recordsBookCip) {
+        this.recordsId = recordsId;
+        this.recordsBookName = recordsBookName;
+        this.recordsBookAuthor = recordsBookAuthor;
+        this.recordsBookLanguage = recordsBookLanguage;
+        this.recordsBookPublisher = recordsBookPublisher;
+        this.recordsBookEdition = recordsBookEdition;
+        this.recordsBookCover = recordsBookCover;
+        this.recordsBookCip = recordsBookCip;
+    }
 
     public BookUploadRecords(Date recordsCreatetime, Long recordsUploadOrgId, String recordsUploadOrgName, String recordsBookName, String recordsBookAuthor, String recordsBookLanguage, String recordsBookPublisher, String recordsBookEdition, String recordsBookCip, String recordsStatus, Date recordsUpdateDatetime) {
         this.recordsCreatetime = recordsCreatetime;
