@@ -65,41 +65,22 @@ public class OrganizationServiceImpl implements OrganizationService {
         return "redirect:/org/orgmanage";
     }
 
-    /**
-    * @Description: 接受传参，向表中添加新的组织，返回插入结果
-    * @Param: [orgname, orgpassword, orgmail, orgheadpic]
-    * @return: int
-    * @Author: chenjiajun
-    * @Date: 2021/2/25
-    */
-//    @Override
-//    public int RegisterNewOrganization(String orgname, String orgpassword, String orgmail, String orgheadpic) {
-//        Organization organizationTemp = new Organization(orgname,orgpassword,orgmail,orgheadpic);
-//        return organizationMapper.insert(organizationTemp);
-//    }
-
     @Override
     public int DeleteOrganization(List<Organization> list) {
         return 0;
     }
 
-//    @Override
-//    public int DeleteOrganization(List<Organization> list) {
-//        int res = 0;                        //记录成功删除的组织用户数目
-//        for (list: ;org) {
-//            if(organizationMapper.delete(org) == 1)res+;
-//        }
-//
-//
-//
-////        int[] a ={1,2,3,4};
-////        for (a:
-////             ) {
-////
-////        }
-//
-//
-//
-//        return res;
-//    }
+    /**
+    * @Description: 检查注册机构运营合法性
+    * @Param: [orgId]
+    * @return: com.example.demo.domain.Organization
+    * @Author: chenjiajun
+    * @Date: 2021/5/8
+    */
+    @Override
+    public Organization checkLegality(Long orgId) {
+        return organizationMapper.getLegalityOrg(orgId,6);
+    }
+
+
 }

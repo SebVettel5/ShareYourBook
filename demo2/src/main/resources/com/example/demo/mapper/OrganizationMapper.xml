@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.demo.mapper.OrganizationMapper">
+    <resultMap id="storeOrgInfo" type="com.example.demo.domain.Organization">
+        <result property="orgName" column="org_name"/>
+        <result property="orgId" column="org_id"/>
+        <result property="orgAvatar" column="org_avatar"/>
+        <result property="orgPoints" column="org_points"/>
+    </resultMap>
     <!-- Method: select org by phone and password in org table and return an org object-->
     <select id="Login" parameterType="String" resultType="com.example.demo.domain.Organization">
         select
@@ -9,5 +15,16 @@
             organizations
         where
             org_id = #{account}  and  org_password = #{password}
+    </select>
+    <select id="getLegalityOrg" resultType="com.example.demo.domain.Organization">
+        select
+            org_name,org_id,org_avatar,org_points
+        from
+            organizations
+        where
+            org_id = #{orgId},
+           and
+            org_points > #{orgPoints}
+
     </select>
 </mapper>

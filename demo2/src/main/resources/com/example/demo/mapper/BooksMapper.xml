@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.BooksMapper">
+    <resultMap id="orderBookPreData" type="com.example.demo.domain.Book">
+        <result property="bookId" column="book_id"/>
+        <result property="bookCover" column="book_cover" />
+        <result property="bookName" column="book_name" />
+        <result property="bookPrice" column="book_price" />
+        <result property="bookOrgId" column="book_org_Id"/>
+    </resultMap>
+    <resultMap id="bookDataPre" type="com.example.demo.domain.Book">
+        <result property="bookId" column="book_id"/>
+        <result property="bookCover" column="book_cover" />
+        <result property="bookEdition" column="book_edition" />
+        <result property="bookPublisher" column="book_publisher" />
+        <result property="bookLanguage" column="book_language" />
+        <result property="bookAuthor" column="book_author" />
+        <result property="bookName" column="book_name" />
+        <result property="bookStatus" column="book_status" />
+        <result property="bookPrice" column="book_price" />
+        <result property="bookAmount" column="book_amount" />
+        <result property="bookDescription" column="book_description" />
+    </resultMap>
+    <resultMap id="storeBook" type="com.example.demo.domain.Book">
+        <result property="bookId" column="book_id"/>
+        <result property="bookCover" column="book_cover" />
+        <result property="bookName" column="book_name" />
+        <result property="bookPrice" column="book_price" />
+        <result property="bookOrgName" column="book_org_name"/>
+        <result property="bookOrgId" column="book_org_Id"/>
+    </resultMap>
+    <select id="getBookByStatus" resultMap="bookDataPre">
+        select
+            book_id,book_cover,book_edition,book_publisher,book_language,
+            book_author,book_name,book_status,book_price,book_amount,
+            book_description
+        from
+            books
+        where
+            book_org_id = #{orgId}
+          and
+            book_status = #{status}
+          and
+            book_data_status = #{dataStatus}
+    </select>
+    <update id="changeStatusById">
+        update
+            books
+        set
+            book_status = #{status}
+        where
+            book_id = #{bookId}
+          and
+            book_org_id = #{orgId}
+    </update>
+    <select id="checkLegality" resultType="com.example.demo.domain.Book">
+        select
+            *
+        from
+            books
+        where
+            book_id = #{bookId}
+          and
+            book_org_id = #{orgId}
+    </select>
+    <select id="selectAllByOrgId" resultType="com.example.demo.domain.Book">
+        select
+            *
+        from
+            books
+        where
+            book_org_id = #{orgId}
+          and
+            book_data_status = true
+    </select>
+    <select id="statusTrigger">
+        call update_status(#{bookId});
+    </select>
+    <update id="deleteById">
+        update
+            books
+        set
+            book_data_status = 0
+        where
+            book_id = #{bookId}
+          and
+            book_org_id = #{orgId}
+    </update>
+    <select id="selectAllByStatus" resultMap="storeBook">
+        select
+            book_name,book_org_name,book_price,book_id,book_cover,book_org_Id
+        from
+            books
+        where
+            book_status = #{status}
+           and
+            book_data_status = 1
+    </select>
+    <select id="getBookById" resultMap="bookDataPre">
+        select
+            book_id,book_cover,book_edition,book_publisher,book_language,
+            book_author,book_name,book_status,book_price,book_amount,
+            book_description
+        from
+            books
+        where
+            book_id = #{bookId}
+           and
+            book_status = 'onSale'
+           and
+            book_data_status = 1
+    </select>
+    <select id="fuzzySearchBooks" resultMap="storeBook">
+        select
+            book_name,book_org_name,book_price,book_id,book_cover,book_org_Id
+        from
+            (select *
+               from books as b
+               where
+                b.book_name like #{searchString}
+               or
+                b.book_org_name like #{searchString}
+               or
+                b.book_publisher like #{searchString}
+               or
+                b.book_author like #{searchString}
+               and
+                b.book_status = #{bookStatus}
+               and
+                b.book_data_status = #{dataStatus}
+            )as b,organizations as o
+        <where>
+            b.book_org_id = o.org_id
+            and
+            o.org_points > 6
+            <if test="orgId != null">
+                and
+                    org_id = #{orgId}
+            </if>
+        </where>
+
+    </select>
+    <select id="orderBookInfo" resultMap="orderBookPreData">
+        select
+            book_id,book_cover,book_name,book_price,book_org_id
+        from
+            books
+        where
+            book_id = #{bookId}
+           and
+            book_status = 'onSale'
+           and
+            book_data_status = 1
+    </select>
+</mapper>

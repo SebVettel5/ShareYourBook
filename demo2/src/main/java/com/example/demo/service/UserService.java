@@ -31,4 +31,6 @@ public interface UserService {
     int UpdateUserInformation(User u);
 
     String UserLogin(String phone, String password, Model model, RedirectAttributes redirectAttributes, HttpSession session);
+
+    User login(String account, String password);
 }

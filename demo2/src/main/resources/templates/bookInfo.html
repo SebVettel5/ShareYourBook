@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>sharebook|bookInfo</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../static/css/main.css" />
+        <link rel="stylesheet" href="../static/css/mystyle.css"/>
+	</head>
+	<body class="about is-preload">
+		<div id="page-wrapper">
+			<!-- 页首部分 -->
+				<section id="header" style="background-color: #EBEBEB;">
+					<div class="container">
+						<!-- Logo -->
+							<h1 id="title">关于</h1>
+						<!-- Nav -->
+							<nav id="nav" th:replace="fragments :: nav"></nav>
+					</div>
+				</section>
+			<!-- 主要内容部分 -->
+				<section id="main">
+					<div class="container">
+
+                        <!--显示书籍信息-->
+						<div id="content" class="book_info_contain">
+                            <div style="display: none">
+                                <input id="user" />
+                            </div>
+							<div style="width: 30%">
+                                <img src="../static/css/images/rename.jpg" style="width: 100%">
+                            </div>
+                            <!--图书信息-->
+                            <div class="book_info_show">
+                                <div th:text="${book.bookName}" style="font-size: xx-large;color: black;font-weight: 800">软件工程概论</div>
+                                <div style="margin-top: 2%;background-color: #e5e5e5;font-size:small">
+                                    <div class="book_info_col">
+                                        <div>价格</div>
+                                        <div th:text="'￥:'+${book.bookPrice}+'元/日'" style="color: red;font-size: x-large;margin-left: 10%">￥:0.15元/日</div>
+                                    </div>
+                                    <div class="book_info_col">
+                                        <div>其他</div>
+                                        <div style="color: red;font-size: x-large;margin-left: 10%">需要押金认证</div>
+                                    </div>
+                                </div>
+                                <div style="font-size: small;color: black;margin-top: 2%;margin-bottom: 2%;font-weight: 800">运费：8元，三十天以上免运费</div>
+                                <div >
+                                    <div class="book_info_col" >
+                                        <div class="store_book_info_title">作者：</div>
+                                        <div th:text="${book.bookAuthor}">郑人杰</div>
+                                    </div>
+                                    <div class="book_info_col">
+                                        <div class="store_book_info_title">出版社：</div>
+                                        <div th:text="${book.bookPublisher}">机械工业出版社</div>
+                                    </div>
+                                    <div class="book_info_col">
+                                        <div class="store_book_info_title">版次：</div>
+                                        <div th:text="${book.bookEdition}">第一版第一次</div>
+                                    </div>
+                                    <div class="book_info_col">
+                                        <div class="store_book_info_title">语言：</div>
+                                        <div th:text="${book.bookLanguage}">汉语</div>
+                                    </div>
+                                    <div class="book_info_col">
+                                        <div class="store_book_info_title" style="width: 20%;">简介：</div>
+                                        <div th:text="${book.bookDescription}">这是一本非常好的数据库入门书籍</div>
+                                    </div>
+                                </div>
+                                <form id="confirmData" >
+                                    <div class="book_info_col">
+                                        <input name="bookId" style="display: none" th:value="${book.bookId}"/>
+                                        <div class="store_book_info_title">数量：</div>
+                                        <div>
+                                            <input type="number" value="1" name="booksAmount" class="store_num_input" oninput="if (value<0)value=0;" onchange="checkAmount(value)">
+                                        </div>
+                                        <div th:text="'库存:'+${book.bookAmount}" style="font-size: xx-small;color: black;margin-left: 1%">库存:1</div>
+                                    </div>
+                                    <div class="book_info_col">
+                                        <input name="bookId" style="display: none" th:value="${book.bookId}"/>
+                                        <div class="store_book_info_title">借阅天数：</div>
+                                        <div>
+                                            <input type="number" value="1" name="booksDays" class="store_num_input" oninput="if (value<1)value=1;if (value>999)value=999" >
+                                        </div>
+                                    </div>
+                                </form>
+                                <div id="warrn" style="display: none">超出库存数量！</div>
+                                <div style="text-align: left;">
+                                    <button id="buyNow" class="button is-warning is-light" style="width: 30%" type="submit" onclick="buyNow()">立即购买</button>
+                                    <button id="joinCart" class="button is-danger is-light" style="width: 30%" type="submit" onclick="putInCart()">加入购物车</button>
+                                </div>
+                            </div>
+						</div>
+					</div>
+				</section>
+			<!-- 页脚部分 -->
+				<section id="footer" th:replace="fragments :: foot"></section>
+		</div>
+        <div th:replace="fragments :: script"></div>
+    <script>
+        //检测书籍数量
+        function checkAmount(val){
+            if(val > [[${book.bookAmount}]]){
+                document.getElementById("warrn").style.display="block";
+                $('#buyNow').attr("disabled","true");
+            }
+            else{
+                document.getElementById("warrn").style.display="none";
+                $('#buyNow').removeAttr("disabled");
+            }
+        }
+
+        function buyNow() {
+            var form = document.getElementById("confirmData");
+            form.action="/buyBookNow";
+            form.submit();
+        }
+
+        function putInCart() {
+            var form = document.getElementById("confirmData");
+            form.action="/putInCart";
+            form.submit();
+        }
+
+        // function putInCar() {
+        //     var user = [[${user}]];
+        //     alert(user);
+        // }
+    </script>
+	</body>
+</html>

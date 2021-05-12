@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.ViewObject.CommentVO;
-import com.example.demo.domain.BookUploadRecords;
-import com.example.demo.domain.BorrowForms;
-import com.example.demo.domain.Collection;
-import com.example.demo.domain.Organization;
+import com.example.demo.domain.*;
 import com.example.demo.service.Impl.RecordsServiceImpl;
+import com.example.demo.util.GeneralUtil;
 import com.github.pagehelper.PageInfo;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
@@ -18,9 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author ：chenjiajun
@@ -28,7 +24,7 @@ import java.util.List;
  * @date ：2021/3/24 20:31
  */
 @Controller
-public class BookAndRecordsController {
+public class RecordsController {
 
     @Autowired
     private RecordsServiceImpl recordsService;
@@ -75,8 +71,14 @@ public class BookAndRecordsController {
         return recordsService.getUserCollection(page,limit,request);
     }
 
+    @RequestMapping("/org/uploadbookpage")
+    public String UploadBook(Model model){
+        model.addAttribute("flashRecord",new BookUploadRecords());
+        return "uploadbook";
+    }
+
     /**
-     * @Description: 上传图书申请的服务测试
+     * @Description: 上传图书申请，同时也是重新上传图书的申请
      * @Param: [bookName, publisher, author, edition, cip, language, avart]
      * @return: com.example.demo.domain.BookUploadRecords
      * @Author: chenjiajun
@@ -90,38 +92,19 @@ public class BookAndRecordsController {
                                         @RequestParam(value = "edition") String edition,
                                         @RequestParam(value = "cip") String cip,
                                         @RequestParam(value = "language") String language,
-                                        @RequestParam(value = "avart") MultipartFile avart) throws FileNotFoundException {
+                                        @RequestParam(value = "avart") MultipartFile avart,
+                                        @RequestParam(value = "id") Long flashRecordsId) throws FileNotFoundException {
         //获取当前上传书籍的机构
         Organization org = (Organization) session.getAttribute("org");
-
-        //参数
-        Date date = new Date();
-        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
-        dateFormat.format(date);
-        BookUploadRecords bupr = new BookUploadRecords(date,org.getOrgId(),org.getOrgName(),bookName,author,language,publisher,edition,cip,"审核中",date);
-        bupr.setRecordsDataStatus(true);
-//        System.out.println(bupr.getRecordsCreatetime());
-        //先插入不带图的记录
-        //再按照获取的id给图片重新命名再修改记录
-        bupr = recordsService.uploadRecords(bupr);
-
-        //获取图片文件
-        if (!avart.isEmpty()){
-            try {
-                BufferedOutputStream outputStream = new BufferedOutputStream(
-                        new FileOutputStream( new File("E:\\localImg\\"+bupr.getRecordsId().toString()+".jpg")));//图片保存路径，暂时用本地路径来进行演示
-                outputStream.write(avart.getBytes());
-                outputStream.flush();
-                outputStream.close();
-                bupr.setRecordsBookCover(bupr.getRecordsId().toString()+".jpg");
-                recordsService.updateUploadRecords(bupr);
-            } catch (IOException e) {
-                e.printStackTrace();
-                model.addAttribute("optionMessage","内部错误！请稍后再试！");
-                return "uploadBook";
-            }
+        //验证数据操作权限
+        BookUploadRecords bookUploadRecords = recordsService.getBookUploadsById(org.getOrgId(),flashRecordsId);
+        if (flashRecordsId !=null && bookUploadRecords == null){
+            model.addAttribute("optionMessage","没有相关操作权限！请重新确认后进行操作！");
+            return "uploadBook";
         }
-        model.addAttribute("optionMessage","上传成功！");
+        //返回上传操作反馈信息
+        model.addAttribute("optionMessage",recordsService.insertUploadRecords(org,bookName,author,language,publisher,edition,cip,avart,bookUploadRecords));
+        model.addAttribute("flashRecord",new BookUploadRecords());
         return "uploadBook";
     }
 
@@ -133,13 +116,14 @@ public class BookAndRecordsController {
     * @Author: chenjiajun
     * @Date: 2021/4/17
     */
-    @RequestMapping("/org/getData")
+    @RequestMapping("/org/uploadrecords")
     public String orgGetData(Model model, HttpSession httpSession, @RequestParam int pageNum,@RequestParam String listType) throws ParseException {
         //获取机构用户对象
         Organization org = (Organization) httpSession.getAttribute("org");
         //进行分页查询，将分页信息和查询到的数据分别放到model中,pageSize为可调整的单页数据量
-
-        model.addAttribute("result",recordsService.getOrgUploadRecordsByStatus(org.getOrgId(),listType,pageNum,4,true));
+        System.out.println(listType+" "+pageNum);
+        model.addAttribute("listType",listType);
+//        model.addAttribute("result",recordsService.getOrgUploadRecordsByStatus(org.getOrgId(),listType,pageNum,4,true));
         switch (listType){
             case "checkingList":model.addAttribute("result",recordsService.getOrgUploadRecordsByStatus(org.getOrgId(),"审核中",pageNum,4,true));
                                 break;
@@ -165,33 +149,10 @@ public class BookAndRecordsController {
     @RequestMapping("/org/getAllBookUploadRecords")
     public String orgGetAllRecords(Model model,HttpSession session,@RequestParam int pageNum,@RequestParam String listType){
         Organization org = (Organization) session.getAttribute("org");
+        model.addAttribute("listType",listType);
         model.addAttribute("result",recordsService.getAllUploadRecordPages(org.getOrgId(),pageNum,4));
-        System.out.println(1);
-        return "org/allrecords";
+        return "org/uploadrecords";
     }
-
-
-
-
-//    /***
-//    * @Description: BookUploadRecords单条数据设置不可查看
-//    * @Param: [model, httpSession, arr]
-//    * @return: java.lang.String
-//    * @Author: chenjiajun
-//    * @Date: 2021/4/19
-//    */
-//    @RequestMapping("/org/posttest")
-//    @ResponseBody
-//    public String orgWithdrawRecord(Long recordId) throws ParseException {
-//        //影响一条数据则为修改成功
-//        if (recordsService.deletUploadRecordsById(recordId, Boolean.FALSE) == 1){
-//            //返回撤销成功信息
-//            return "成功撤销记录！";
-//        }
-//        else{
-//           return "撤销失败，请刷新后重试!";
-//        }
-//    }
 
     /***
     * @Description: 对选中的图书申请记录进行假删除（设置不可访问），并返回处理结
@@ -209,18 +170,9 @@ public class BookAndRecordsController {
         return recordsService.changeUploadRecordsById(org.getOrgName(),arr);
     }
 
-//    @RequestMapping("/org/checkinglist/withdraw")
-//    @ResponseBody
-//    public String orgWithdrawRecords(Model model,HttpSession httpSession,@RequestBody String[] arr){
-//        //获取机构用户对象
-//        Organization org = (Organization) httpSession.getAttribute("org");
-//        return recordsService.withdrawUploadRecordsById(org.getOrgId(),arr);
-//    }
-
-
     @RequestMapping("/datatest")
     @ResponseBody
-    public PageInfo<BookUploadRecords> dataTest(@RequestParam int pageNum) throws ParseException {
+    public PageInfo<BookUploadRecords> dataTest(int pageNum) throws ParseException {
       return   recordsService.getOrgUploadRecordsByStatus((long) 100000003,"审核中",pageNum,4,true);
     }
 
@@ -233,7 +185,7 @@ public class BookAndRecordsController {
     */
     @RequestMapping("/org/modification")
     public String orgModification(Model model,@RequestParam Long recordsId){
-        return recordsService.getBookUploadsByid(model,recordsId);
+        return recordsService.getBookUploadsForMod(model,recordsId);
     }
 
     /**
@@ -244,7 +196,7 @@ public class BookAndRecordsController {
     * @Date: 2021/4/25
     */
     @PostMapping("/org/modificationPost")
-    public String orgModificationPost(HttpSession session,Model model,
+    public String orgModificationPost(Model model,
                                       @RequestParam(value = "recordsId")String recordsId,
                                       @RequestParam(value = "bookName")String bookName,
                                       @RequestParam(value = "publisherName")String publisherName,
@@ -278,5 +230,26 @@ public class BookAndRecordsController {
     @RequestMapping("/org/putaway")
     public String orgPutaway(){
         return "org/putaway";
+    }
+
+    /**
+    * @Description: 获取当前的记录，加载到上传页面
+    * @Param: [model, records]
+    * @return: java.lang.String
+    * @Author: chenjiajun
+    * @Date: 2021/4/29
+    */
+    @RequestMapping("/org/reUploadRecord")
+    public String reUploadRecord(HttpSession session,Model model,@RequestParam Long recordsId){
+        Organization org = (Organization) session.getAttribute("org");
+        BookUploadRecords records = recordsService.getBookUploadsById(org.getOrgId(),recordsId);
+        if(records != null){
+            //进行图片地址进行解析
+            records.setRecordsBookCover(GeneralUtil.imagUrl(records.getRecordsBookCover()));
+            model.addAttribute("flashRecord",records);
+        }  else{
+            model.addAttribute("optionMessage","所选数据异常，请重试！");
+        }
+        return "uploadbook";
     }
 }

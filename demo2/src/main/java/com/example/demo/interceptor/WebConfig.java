@@ -36,5 +36,6 @@ public class WebConfig implements WebMvcConfigurer {
         //域名例如：127.0.0.1:8080/opt/1.jpg
         registry.addResourceHandler("/localImg/**").addResourceLocations("file:E:/localImg/");
         registry.addResourceHandler("org/static/css/images/**").addResourceLocations("classpath:/static/css/images/");
+        registry.addResourceHandler("/shareBookPic/bookCover/**").addResourceLocations("file:E:/shareBookPic/bookCover/");
     }
 }

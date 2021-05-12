@@ -21,6 +21,7 @@ public class Organization {
   private String orgAvatar;
   private Long orgAuthenticationId;
   private Long orgFansCount;
+  private float orgPoints;
 
     public Organization(Long orgId, String orgName, String orgPassword, String orgEmail, String orgAvatar, Long orgAuthenticationId, Long orgFansCount) {
         this.orgId = orgId;
@@ -30,5 +31,8 @@ public class Organization {
         this.orgAvatar = orgAvatar;
         this.orgAuthenticationId = orgAuthenticationId;
         this.orgFansCount = orgFansCount;
+    }
+
+    public Organization() {
     }
 }

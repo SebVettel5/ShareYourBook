@@ -7,6 +7,7 @@ import com.example.demo.domain.Collection;
 import com.example.demo.domain.Organization;
 import com.github.pagehelper.PageInfo;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,19 +27,20 @@ public interface RecordsService {
 
     BookUploadRecords uploadRecords(BookUploadRecords bookUploadRecords);
 
-    int updateUploadRecords(BookUploadRecords bookUploadRecords);
 
     PageInfo<BookUploadRecords> getOrgUploadRecordsByStatus(Long orgid, String status, int pageNum, int pageSize,Boolean dataStatus) throws ParseException;
 
     String changeUploadRecordsById(String optionName, String[] arr);
 
-    String getBookUploadsByid(Model model,Long recordsId);
+    String getBookUploadsForMod(Model model,Long recordsId);
 
     String updateRecords(Model model,Long recId, String bookName, String author, String language, String publisherName, String edition, String cip, String cover);
 
     PageInfo<BookUploadRecords> getAllUploadRecordPages(Long orgId, int pageNum,int pageSize);
 
-    BookUploadRecords getBookUploadsById(Long recordsId);
-//
-//    BookUploadRecords getOneUploadRecord(Long orgId, Long recordsId);
+    BookUploadRecords getBookUploadsById(Long orgId,Long recordsId);
+
+    String insertUploadRecords(Organization org, String bookName, String author, String language,
+                               String publisher, String edition, String cip, MultipartFile avart,
+                               BookUploadRecords bookUploadRecords);
 }

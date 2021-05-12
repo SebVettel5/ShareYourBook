@@ -29,4 +29,6 @@ public interface BookUploadRecordsMapper extends BaseMapper<BookUploadRecords> {
     List<BookUploadRecords> selectAllByStatus(Long orgid, Boolean dataStatus);
 
     int withdrawById(Long recordsId, String status,Date date,String optioner);
+
+    BookUploadRecords findOne(Long orgId, Long recordsId);
 }

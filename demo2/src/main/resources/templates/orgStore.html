@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head >
+		<title>sharebook|orgBookStore</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../static/css/main.css" />
+        <link rel="stylesheet" href="../static/css/mystyle.css">
+        <link rel="stylesheet" href="../static/css/table.css">
+	</head>
+	<body class="borrowbook is-preload">
+		<div id="page-wrapper">
+
+			<!-- 页首部分  -->
+				<section id="header">
+					<div class="container">
+						<!-- 标题 -->
+							<h1 id="title" th:text="${storeOrg.orgName}">新的旅程从挑选一本书开始</h1>
+                        <!-- 导航栏 -->
+                        <nav id="nav" th:replace="fragments :: nav"></nav>
+					</div>
+				</section>
+
+			<!-- 主要内容部分 -->
+				<section id="main">
+					<div class="container" >
+						<div class="row">
+
+							<!-- 左栏 -->
+								<div id="sidebar" class="col-4 col-12-medium">
+									<!--
+                                    	作者：offline
+                                    	时间：2021-02-21
+                                    	描述：左侧列分成行，每行内含标题和一个表格，展示相关排名信息
+                                    -->
+										<section>
+											<ul class="divided">
+												<li>
+													<!-- 热门书籍排名 -->
+														<article class="box excerpt">
+															<header>
+																<span class="date">全站最热书籍</span>
+															</header>
+															<h2>这里有一个表格，显示全站书籍借阅数目排名前五的书籍</h2>
+														</article>
+												</li>
+												<li>
+													<!-- 全站热门作者排名 -->
+														<article class="box excerpt">
+															<header>
+																<span class="date">全站最热作者</span>
+															</header>
+														</article>
+
+												</li>
+												<li>
+													<!-- 全站读者共享图书数目排名 -->
+														<article class="box excerpt">
+															<header>
+																<span class="date">全站读者共享图书排名</span>
+															</header>
+														</article>
+												</li>
+												<li>
+													<!-- 全站机构共享图书数目排名 -->
+														<article class="box excerpt">
+															<header>
+																<span class="date">全站机构共享图书排名</span>
+															</header>
+														</article>
+												</li>
+											</ul>
+										</section>
+
+
+								</div>
+
+							<!--
+                            	作者：offline
+                            	时间：2021-02-21
+                            	描述：右侧是读者检索图书的地方，读者可以关键字查询，也可以按照条件筛查，可以点击查看具体的书籍信息
+                            		   也可以直接跳转到借书界面
+                            -->
+
+                                    <div id="content" class="col-8 col-12-medium imp-medium">
+                                        <!--头部区域-->
+                                        <div style="position: relative;width: 100%;">
+                                            <div style="display: flex">
+                                                <img src="../static/css/images/upload-records.png" style="width: 20%!important;height: 30%;margin-top: 0!important;margin-left: 0!important;">
+                                                <div th:text="${storeOrg.orgName}" style="text-align: center;font-size: xx-large;font-weight: bolder">时代云图</div>
+                                                <div style="margin-left:40%">
+                                                    <h1 style="color: #a94442;display: flex">信用评分</h1>
+                                                    <div th:text="${storeOrg.orgPoints}" style="font-size: 7rem;margin-top: 30%;color: #ED786A">10</div>
+                                                </div>
+                                            </div>
+                                            <form action="/store/searchBooks">
+                                                <input name="orgId" th:value="${storeOrg.orgId}" style="display: none"/>
+                                                <input name="pageNum" value="1" style="display: none"/>
+                                                <input th:value="${searchString} ? ${searchString} : ''" name="searchString" class="input is-normal" type="text" placeholder="书籍名称/作者/出版社/藏书机构" style="border-color: red;width: 50%">
+                                                <button class="button is-danger" type="submit" style="width: 10%;height: 2.7em!important;margin-left: -0.5em;border-radius: 0px!important;">搜索本店</button>
+                                            </form>
+
+                                        </div>
+                                        <!--分割线-->
+                                        <div class="line"></div>
+                                        <!--商品列表-->
+                                        <div th:each="book : ${result.list}" class="book_store_items">
+
+
+                                         <div class="book_store_bookItem">
+                                                <div class="book_store_bookContent">
+                                                    <div  class="book_store_bookCoverDiv">
+                                                        <img src="../static/css/images/rename.jpg" th:src="${book.bookCover}" class="book_store_bookCover">
+                                                    </div>
+                                                    <div class="book_store_bookInfo" >
+                                                        <div th:text="'￥:'+${book.bookPrice}+'元/天'" style="font-size:large;color: red;font-weight: 800;">￥:0.15元/天</div>
+                                                        <div style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;-webkit-line-clamp: 2;">
+                                                            <a th:href="'/bookItemInfo?bookId='+${book.bookId}" th:text="${book.bookName}" style="font-size: 15px!important;font-weight: 900;color: black!important;">
+                                                                数据库理论数据库理论数据库理论数据库理论1
+                                                            </a>
+                                                        </div>
+                                                        <div style="font-size: 10px!important;;font-weight: 800;">
+                                                            <a th:href="'/store/getOrgStore?pageNum=1&orgId='+${book.bookOrgId}"  th:text="${book.bookOrgName}">时代云图</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!--分页情况-->
+
+                                    </div>
+                                    <!--分割线-->
+
+                                    <div style="display: flex;width: 100%;justify-content: center">
+                                        <ul class="pagination pull-right no-margin">
+                                            <!-- 首页 -->
+                                            <li>
+                                                <a th:href="'/store/searchBooks?pageNum=1&searchString='+${searchString}+'&orgId='+${storeOrg.orgId}">首页</a>
+                                            </li>
+                                            <!-- 上一页 -->
+                                            <li th:if="${result.hasPreviousPage}">
+                                                <a th:href="'/store/searchBooks?pageNum=' + ${result.prePage}+'&searchString='+${searchString}+'&orgId='+${storeOrg.orgId}" th:text="上一页"></a>
+                                            </li>
+                                            <!-- 中间页 -->
+                                            <li th:each="pages:${result.navigatepageNums}">
+                                                <a th:href="'/store/searchBooks?pageNum=' + ${pages}+'&searchString='+${searchString}+'&orgId='+${storeOrg.orgId}" th:text="${pages}" ></a>
+                                                <!--                            <a th:href="'/org/checkinglist?pageNum=' + ${pages}" th:text="${pages}" th:if="${pages eq pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
+                                            </li>
+                                            <!-- 下一页 -->
+                                            <li th:if="${result.hasNextPage}">
+                                                <a th:href="'/store/searchBooks?pageNum=' + ${result.nextPage}+'&searchString='+${searchString}+'&orgId='+${storeOrg.orgId}" th:text="下一页"></a>
+                                            </li>
+                                            <!-- 尾页 -->
+                                            <li>
+                                                <a th:href="'/store/searchBooks?pageNum=' + ${result.size}+'&searchString='+${searchString}+'&orgId='+${storeOrg.orgId}">尾页</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+						</div>
+					</div>
+				</section>
+
+            <!-- 页脚部分 -->
+            <section id="footer" th:replace="fragments :: foot"></section>
+
+		</div>
+        <div th:replace="fragments :: script"></div>
+	</body>
+</html>

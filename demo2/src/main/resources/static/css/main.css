@@ -344,7 +344,7 @@ input, select, textarea {
 		}
 
 		.row > .col-8 {
-			width: 80%;
+			width: 70%;
 		}
 
 		.row > .off-8 {
@@ -1781,7 +1781,7 @@ input, select, textarea {
 		text-align: center;
 		font-size: 0.85em;
 		letter-spacing: 2px;
-		padding: 0.85em 2.75em 0.85em 2.75em;
+		/*padding: 0.85em 2.75em 0.85em 2.75em;*/
 	}
 
 		input[type="button"].icon:before,
@@ -2160,7 +2160,7 @@ input, select, textarea {
 		position: relative;
 		overflow: hidden;
 		background: #fff;
-		padding: 6em 0;
+		padding: 3em 0;
 	}
 
 /* Content */

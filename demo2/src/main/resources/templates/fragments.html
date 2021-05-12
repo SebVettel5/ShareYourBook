@@ -17,7 +17,7 @@
                         <li><a class="icon solid fa-comment" href="readercommunity"><span>书友圈</span></a></li>
                         <li th:unless="${session.userType}"><a class="icon solid fa-user"  href="login" ><span>登录</span></a>
                         </li>
-                        <li th:unless="not ${session.user}"><a class="icon solid fa-user"  href="personalpage"
+                        <li th:unless="not ${session.user}"><a class="icon solid fa-user"  href="/org/orgmanage"
                                th:text="'欢迎！ '+${session.user.userNickname}"><span>登录</span>1</a>
                             <ul>
                                 <li><a href="javascript:void(0)" onclick="layout()">退出</a></li>

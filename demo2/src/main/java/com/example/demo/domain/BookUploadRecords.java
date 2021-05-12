@@ -73,5 +73,6 @@ public class BookUploadRecords {
         this.recordsUpdateDatetime = recordsUpdateDatetime;
     }
 
-
+    public BookUploadRecords() {
+    }
 }

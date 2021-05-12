@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head >
+		<title>sharebook|bookStore</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../static/css/main.css" />
+        <link rel="stylesheet" href="../static/css/mystyle.css">
+        <link rel="stylesheet" href="../static/css/table.css">
+	</head>
+	<body class="about is-preload">
+		<div id="page-wrapper">
+			<!-- 页首部分 -->
+				<section id="header" style="background-color: #EBEBEB;">
+					<div class="container">
+						<!-- Logo -->
+						<!-- Nav -->
+							<nav id="nav" th:replace="fragments :: nav"></nav>
+					</div>
+				</section>
+
+			<!-- 主要内容部分 -->
+				<section id="main">
+					<div class="container">
+						<div id="content">
+                            <!--搜索栏-->
+                            <div style="position: relative;width: 100%;">
+                                <form action="/searchForBooks">
+                                    <input name="pageNum" value="1" style="display: none"/>
+                                    <input th:value="${searchString} ? ${searchString} : ''" name="searchString" class="input is-normal" type="text" placeholder="书籍名称/作者/出版社/藏书机构" style="border-color: red;width: 50%">
+                                    <button class="button is-danger" type="submit" style="width: 10%;height: 2.7em!important;margin-left: -0.5em;border-radius: 0px!important;">搜索</button>
+                                </form>
+                            </div>
+                            <!--分割线-->
+                            <div class="line"></div>
+                            <!--商品列表-->
+							<div th:each="book : ${result.list}" class="book_store_items">
+                                <div class="book_store_bookItem">
+                                    <div class="book_store_bookContent">
+                                        <div  class="book_store_bookCoverDiv">
+                                            <img src="../static/css/images/rename.jpg" th:src="${book.bookCover}" class="book_store_bookCover">
+                                        </div>
+                                        <div class="book_store_bookInfo" >
+                                            <div th:text="'￥:'+${book.bookPrice}+'元/天'" style="font-size:large;color: red;font-weight: 800;">￥:0.15元/天</div>
+                                            <div style="display: -webkit-box;-webkit-box-orient: vertical;overflow: hidden;-webkit-line-clamp: 2;">
+                                                <a th:href="'/bookItemInfo?bookId='+${book.bookId}" th:text="${book.bookName}" style="font-size: 15px!important;font-weight: 900;color: black!important;">
+                                                    数据库理论数据库理论数据库理论数据库理论1
+                                                </a>
+                                            </div>
+                                            <div style="font-size: 10px!important;;font-weight: 800;">
+                                                <a th:href="'/store/getOrgStore?pageNum=1&orgId='+${book.bookOrgId}"  th:text="${book.bookOrgName}">时代云图</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!--分页情况-->
+
+						</div>
+                        <!--分割线-->
+
+                        <div style="display: flex;width: 100%;justify-content: center;">
+                            <ul class="pagination pull-right no-margin" style="margin-top: 2%" >
+                                <!-- 首页 -->
+                                <li>
+                                    <a th:href="'/searchForBooks?pageNum=1&searchString='+${searchString}">首页</a>
+                                </li>
+                                <!-- 上一页 -->
+                                <li th:if="${result.hasPreviousPage}">
+                                    <a th:href="'/searchForBooks?pageNum=' + ${result.prePage}+'&searchString='+${searchString}" th:text="上一页"></a>
+                                </li>
+                                <!-- 中间页 -->
+                                <li th:each="pages:${result.navigatepageNums}">
+                                    <a th:href="'/searchForBooks?pageNum=' + ${pages}+'&searchString='+${searchString}" th:text="${pages}" ></a>
+                                    <!--                            <a th:href="'/org/checkinglist?pageNum=' + ${pages}" th:text="${pages}" th:if="${pages eq pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
+                                </li>
+                                <!-- 下一页 -->
+                                <li th:if="${result.hasNextPage}">
+                                    <a th:href="'/searchForBooks?pageNum=' + ${result.nextPage}+'&searchString='+${searchString}" th:text="下一页"></a>
+                                </li>
+                                <!-- 尾页 -->
+                                <li>
+                                    <a th:href="'/searchForBooks?pageNum=' + ${result.size}+'&searchString='+${searchString}">尾页</a>
+                                </li>
+                            </ul>
+                        </div>
+					</div>
+
+				</section>
+			<!-- 页脚部分 -->
+				<section id="footer" th:replace="fragments :: foot"></section>
+		</div>
+        <div th:replace="fragments :: script"></div>
+	</body>
+</html>

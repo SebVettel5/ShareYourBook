@@ -13,4 +13,6 @@ public interface OrganizationService {
 //    int RegisterNewOrganization(String orgname, String orgpassword, String orgmail, String orgheadpic);
 
     int DeleteOrganization(List<Organization> list);
+
+    Organization checkLegality(Long orgId);
 }

@@ -16,4 +16,13 @@ public interface OrganizationMapper extends BaseMapper<Organization> {
     * @Date: 2021/2/25
     */
     Organization Login(String account, String password);
+
+    /**
+    * @Description: 获取一个正在合法运营的注册机构
+    * @Param: [orgId]
+    * @return: com.example.demo.domain.Organization
+    * @Author: chenjiajun
+    * @Date: 2021/5/8
+    */
+    Organization getLegalityOrg(Long orgId,float orgPoints);
 }

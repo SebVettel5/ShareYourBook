@@ -1,13 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.domain.BookUploadRecords;
 import com.example.demo.service.Impl.RecordsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 /**
  * @author ：chenjiajun
@@ -26,7 +23,8 @@ public class PageController {
     }
 
     @RequestMapping("/login")
-    public String Login(){
+    public String Login(Model model){
+        model.addAttribute("type","normal");
         return "login";
     }
 
@@ -37,7 +35,7 @@ public class PageController {
 
     @RequestMapping("/borrowbook")
     public String BorrowBook(){
-        return "borrowbook";
+        return "orgStore";
     }
 
     //忘记密码页面
@@ -66,10 +64,7 @@ public class PageController {
         return "servicestatement";
     }
 
-    @RequestMapping("/org/uploadbookpage")
-    public String UploadBook(){
-        return "uploadbook";
-    }
+
 
     //用户指导
     @RequestMapping("/userguide")
@@ -111,11 +106,6 @@ public class PageController {
     @RequestMapping("/org/orgmanage")
     public  String orgManage(){
         return "org/orgmanagepage";
-    }
-
-    @RequestMapping("/org/uploadrecords")
-    public String orgUploadRecords(){
-        return "org/uploadrecords";
     }
 
     @RequestMapping("/org/allrecords")

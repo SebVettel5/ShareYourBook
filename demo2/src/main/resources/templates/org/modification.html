@@ -9,7 +9,7 @@
 <div class="layui-input-block layui-form" id="modifyClass"
      lay-filter="updateClass" style="margin-top: 30px">
     <div th:if="${optionMessage}" th:text="${optionMessage}" style="text-align: center;color: #ffffff;margin-bottom: 1%;width: 25%;font-size: x-large;background-color: #fcd4dc" >qqq</div>
-    <form class="layui-form" action="/org/modificationPost" method="post" enctype="multipart/form-data"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+    <form id="modificationForm" class="layui-form" action="/org/modificationPost" method="post" enctype="multipart/form-data"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
         <div style="display: none">
             <input th:value="${record.recordsId}" type="text" name="recordsId">
         </div>
@@ -61,7 +61,7 @@
                 <img th:src="@{${record.recordsBookCover}}" alt=""  style="max-width: 80%;max-height: 80%;border: none;margin-left: 100%;" id="imgeShow">
             </div>
         </div>
-        <button type="submit">提交</button>
+        <button type="submit" id="sub" style="display: none">提交</button>
     </form>
 
 </div>

@@ -79,11 +79,15 @@
                             </div>
                         </td>
                         <td >
-                            <div> <button class="button is-danger" th:onclick="'javascript:withdraw('+${record.recordsId}+')'">撤销申请</button></div>
-                            <br>
-                            <div><button class="button is-warning" th:if="${listType} eq 'checkingList'" th:onclick="javascript:modification([[${record}]])">修改信息</button></div>
-                            <br>
+                            <div> <button class="button is-danger" th:if="${listType} eq 'checkingList'" th:onclick="'javascript:withdraw('+${record.recordsId}+')'">撤销申请</button></div>
+
+                            <div><br><button class="button is-widescreen" th:if="${listType} eq 'checkingList'" th:onclick="javascript:modification([[${record}]])">修改信息</button></div>
+
                             <div><button class="button is-success" th:if="${listType} eq 'passedList'"><a href="/org/putaway" style="color: white">去 上 架</a></button></div>
+
+                            <div><button class="button is-checking" th:if="${listType} eq 'allRecordsList' or ${listType} eq 'refusedList'" th:onclick="'javascript:deleteRecords('+${record.recordsId}+',false)'">删除记录</button></div>
+
+                            <div><br><button class="button is-primary" th:if="${listType} eq 'refusedList'"><a th:href="'/org/reUploadRecord?recordsId='+${record.recordsId}" style="color: white" >重新申请</a></button></div>
                         </td>
                     </tr>
                     </tbody>
@@ -101,24 +105,24 @@
                                 <ul class="pagination pull-right no-margin">
                                     <!-- 首页 -->
                                     <li>
-                                        <a th:href="'/org/getData?pageNum=1&status=checkinglist'">首页</a>
+                                        <a th:href="'/org/uploadrecords?pageNum=1&listType='+${listType}">首页</a>
                                     </li>
                                     <!-- 上一页 -->
                                     <li th:if="${result.hasPreviousPage}">
-                                        <a th:href="'/org/getData?pageNum=' + ${result.prePage}+'&status=checkinglist'" th:text="上一页"></a>
+                                        <a th:href="'/org/uploadrecords?pageNum=' + ${result.prePage}+'&listType='+${listType}" th:text="上一页"></a>
                                     </li>
                                     <!-- 中间页 -->
                                     <li th:each="pages:${result.navigatepageNums}">
-                                        <a th:href="'/org/getData?pageNum=' + ${pages}+'&status=checkinglist'" th:text="${pages}" ></a>
+                                        <a th:href="'/org/uploadrecords?pageNum=' + ${pages}+'&listType='+${listType}" th:text="${pages}" ></a>
                                         <!--                            <a th:href="'/org/checkinglist?pageNum=' + ${pages}" th:text="${pages}" th:if="${pages eq pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
                                     </li>
                                     <!-- 下一页 -->
                                     <li th:if="${result.hasNextPage}">
-                                        <a th:href="'/org/getData?pageNum=' + ${result.nextPage}+'&status=checkinglist'" th:text="下一页"></a>
+                                        <a th:href="'/org/uploadrecords?pageNum=' + ${result.nextPage}+'&listType='+${listType}" th:text="下一页"></a>
                                     </li>
                                     <!-- 尾页 -->
                                     <li>
-                                        <a th:href="'/org/getData?pageNum=' + ${result.size}+'&status=checkinglist'">尾页</a>
+                                        <a th:href="'/org/uploadrecords?pageNum=' + ${result.size}+'&listType='+${listType}">尾页</a>
                                     </li>
                                 </ul>
                             </div>
@@ -137,19 +141,26 @@
 </div>
 <div th:replace="fragments :: script"></div>
 <script type="text/javascript">
-    // window.onload=function () {
-    //     load_page('checkinglist');
-    // };
-    // function load_page(statu) {
-    //     if(statu === "allrecords")
-    //         document.getElementById("show_page").innerHTML='<object type="text/html" data="/org/getAllBookUploadRecords?pageNum=1" width="100%" height="100%" th:inline="none"></object>';
-    //     else
-    //         document.getElementById("show_page").innerHTML='<object type="text/html" data="/org/getData?pageNum=1&status='+statu+'" width="100%" height="100%"></object>';
-    // }
 
     //实现删除和撤销部分
     //单条数据撤销申请
-    function withdraw(recordId,status) {
+    function withdraw(recordId) {
+        layer.confirm('确定要撤销申请吗？',{
+            btn:['确认','取消']
+        },function () {
+            //确认后进行操作
+            var data = [];
+            // data.push(status);
+            data.push("已撤销");
+            data.push(recordId);
+            processingData(data);
+        },function () {
+
+        })
+    }
+
+    //选中数据删除
+    function deleteRecords(recordId,status) {
         layer.confirm('确定要删除记录吗？注意，删除后不可恢复！',{
             btn:['确认','取消']
         },function () {
@@ -162,12 +173,13 @@
 
         })
     }
+    
     //以AJAX方式将获取的recordsID数组批量回传到服务端
-    function updateAll(status) {
+    function updateAll() {
         //获取已经选择的checkbox条数据
         var arr = [];
         //设置这些记录查看状态为false
-        arr.push(status);
+        arr.push("已撤销");
         //组织数据，选中所有的被选中的数据的id
         $("input[name='check']:checked").each(function (i) {
             let val = $(this).parents("tr").find("td").eq(1).text();
@@ -181,7 +193,7 @@
     function processingData(data) {
         $.ajax({
             type:'post',
-            url:'/org/changeUploadRecords',
+            url:'/org/changeUploadRecordsStatus',
             contentType:"application/json",
             data:JSON.stringify(data),
             success:function (message) {
@@ -203,19 +215,30 @@
         layer.open({
             type:2,
             title:"修改申请信息",
-            area:['50%', '50%'],
+            area:['40%', '80%'],
+            closeBtn:1,
             content:url,
-            // btn:['提交','取消'],
-            // yes:function(layero, index){
-            //     // var body = layero.getChildFrame('body',index);
-            //     // var iframeWin = window[layero.find('modification')[0]['name']];
-            //     // alert(body.find('#bookname').val("1"));
-            //     alert("提交成功！");
+            btn:['提交','取消'],
+            yes:function(index,layero){
+                var body = layer.getChildFrame("body", index); // 得到 iframe 页面层的 BODY
+                var iframeBtn = body.find ('#sub');// 得到 iframe 页面层的提交按钮
+                iframeBtn.click ();// 模拟 iframe 页面层的提交按钮点击
+            },
+            // no:function(){
+            //     location.reload(true);
             // },
             success:function () {
+
+            },
+            // cancel:function(){
+            //     location.reload(true);
+            // },
+            end:function(){
+                location.reload(true);
             }
         })
     }
+
 </script>
 </body>
 </html>

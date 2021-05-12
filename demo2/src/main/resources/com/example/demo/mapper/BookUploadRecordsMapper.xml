@@ -71,4 +71,14 @@
         where
             records_id = #{recordsId}
     </update>
+    <select id="findOne" resultType="com.example.demo.domain.BookUploadRecords">
+        select
+            *
+        from
+            bookuploadrecords
+        where
+            records_id = #{recordsId}
+        and
+            records_upload_org_id = #{orgId}
+    </select>
 </mapper>

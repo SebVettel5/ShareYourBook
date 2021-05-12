@@ -25,8 +25,38 @@ public class Book {
     private String bookAuthor;
     private String bookName;
     private String bookStatus;
-    private Long bookPrice;
+    private Double bookPrice;
     private Long bookAmount;
     private String bookDescription;
+    private Boolean bookDataStatus;
+    private String bookOrgName;
 
+    public Book(String bookCover, String bookEdition, String bookPublisher, String bookLanguage, String bookAuthor, String bookName, String bookStatus, Double bookPrice, Long bookAmount, String bookDescription) {
+        this.bookCover = bookCover;
+        this.bookEdition = bookEdition;
+        this.bookPublisher = bookPublisher;
+        this.bookLanguage = bookLanguage;
+        this.bookAuthor = bookAuthor;
+        this.bookName = bookName;
+        this.bookStatus = bookStatus;
+        this.bookPrice = bookPrice;
+        this.bookAmount = bookAmount;
+        this.bookDescription = bookDescription;
+    }
+
+    public Book(Long bookId, Double bookPrice, Long bookAmount, String bookDescription) {
+        this.bookId = bookId;
+        this.bookPrice = bookPrice;
+        this.bookAmount = bookAmount;
+        this.bookDescription = bookDescription;
+    }
+
+    public Book(Long bookId, Long bookOrgId, String bookCover, String bookName, Double bookPrice, String bookOrgName) {
+        this.bookId = bookId;
+        this.bookOrgId = bookOrgId;
+        this.bookCover = bookCover;
+        this.bookName = bookName;
+        this.bookPrice = bookPrice;
+        this.bookOrgName = bookOrgName;
+    }
 }

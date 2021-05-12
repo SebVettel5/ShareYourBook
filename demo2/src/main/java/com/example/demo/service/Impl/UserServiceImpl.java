@@ -117,5 +117,17 @@ public class UserServiceImpl implements UserService {
         return "redirect:/readercommunity";
     }
 
+    /**
+    * @Description: 登录
+    * @Param: [account, password]
+    * @return: com.example.demo.domain.User
+    * @Author: chenjiajun
+    * @Date: 2021/5/7
+    */
+    @Override
+    public User login(String account, String password) {
+       return userMapper.selectOne(new User(new Long(account),password));
+    }
+
 
 }

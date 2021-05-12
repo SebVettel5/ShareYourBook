@@ -149,4 +149,12 @@ public class controller {
 //    public List<BookUploadRecords> maydatatest(){
 //        return recordsService.getAllUploadRecords();
 //    }
+
+    @RequestMapping("/uploadtestbook")
+    @ResponseBody
+    public List<Book> uploadtestbook(Book book,@RequestParam(value = "avart")MultipartFile avart){
+        List<Book> list = new ArrayList<Book>();
+        list.add(book);
+        return list;
+    }
 }

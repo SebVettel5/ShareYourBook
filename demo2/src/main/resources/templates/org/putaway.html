@@ -1,10 +1,238 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>sharebook|商家 上架管理</title>
+    <title>sharebook|上架管理</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../static/css/mystyle.css">
+    <link rel="stylesheet" href="../../static/css/main.css" />
+    <link rel="stylesheet" href="../../static/css/table.css">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../static/js/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="../../static/layer/layer.js"></script>
 </head>
 <body>
+    <section id="header">
+    <div class="container">
+        <!-- Logo -->
+        <h1 id="title">图书上架管理</h1>
+        <!-- 导航栏 -->
+        <nav id="nav" th:replace="fragments :: nav"></nav>
+    </div>
+</section>
+    <section id="main">
+        <div class="container">
+            <div class="container">
+                <div class="columns">
+                    <div class="column"><a href="/org/getBooksByStatus?status=onSale&pageNum=1"  style="color: #ffffff">在售</a></div>
+                    <div class="column"><a href="/org/getBooksByStatus?status=putOff&pageNum=1"  style="color: #ffffff">已下架</a></div>
+                    <div class="column"><a href="/org/getBooksByStatus?status=shortage&pageNum=1"  style="color: #ffffff">缺货</a></div>
+                    <div class="column"><a href="/org/getBooksByStatus?status=allBooks&pageNum=1"  style="color: #ffffff">所有书籍</a></div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div>
+                <table class="my_table">
+                    <thead  class="td_head">
+                    <tr>
+                        <td class="td_check"></td>
+                        <td class="tb_put_bookname">封面</td>
+                        <td class="tb_put_bookname">书籍名称</td>
+                        <td class="tb_put_cover">书籍信息</td>
+                        <td class="tb_put_normal">数量</td>
+                        <td class="tb_put_normal">价格</td>
+                        <td class="tb_put_bookname">描述信息</td>
+                        <td class="tb_put_normal">操作</td>
+                    </tr>
+                    </thead>
+                    <tbody >
+                    <tr th:each="book : ${result.list}" class="my_car_tr" >
+                        <td><input type="checkbox" name="check"></td>
+                        <td><img style="max-height: 100px!important;" src="../../static/css/images/rename.jpg" th:src="@{${book.bookCover}}"></td>
+                        <td th:text="${book.bookName}">数据库原理</td>
+                        <td>
+                            <div class="td_book_info">
+                                <div>
+                                    <div th:text="'作者:'+${book.bookAuthor}" class="tb_put_bookInfo">作者:王珊</div>
+                                    <div th:text="'出版社:'+${book.bookPublisher}" class="tb_put_bookInfo">出版社:高等教育出版社</div>
+                                    <div th:text="'版次:'+${book.bookEdition}" class="tb_put_bookInfo">版次:2019年第二版第三次</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="display: flex;align-items: center;justify-content: center">
+                                <!--调整图书数量-->
+                                <div ><input th:value="${book.bookAmount}"  th:name="${book.bookId}+'Amount'" class="tb_put_input" type="number"  oninput="if(value>999)value=999;if(value.length>4)value=value.slice(0,3);if(value<0)value=0" ></div>
+                            </div>
+                        </td>
+                        <td >
+                            <div style="display: flex">
+                                <!--调整图书价格-->
+                                <div style="font-size: large;color: red">￥:</div>
+                                <div ><input th:value="${book.bookPrice}" th:name="${book.bookId}+'Price'"  class="tb_put_input" type="number"  oninput="if(value>999)value=999;if(value.length>6)value=value.slice(0,6);if(value<0)value=0" ></div>
+                            </div>
+                        </td>
+                        <td >
+                            <div style="height: 100%;">
+                                <!--图书的简单描述-->
+                                <textarea th:name="${book.bookId}+'Description'" id="book_info" maxlength="250" th:text="${book.bookDescription}"   class="td_book_description_textarea"></textarea>
+                                <div style="font-size: 10px;text-align: right!important;background-color: #ffffe5;margin-top: -10%">
+                                    <span class="count-change">请输入少于250字</span>
+<!--                                    <i ><span class="count-change">0</span>/70</i>-->
+                                </div>
 
+                            </div>
+
+<!--                            <div th:text="${book.bookDescription}" class="tb_put_description">这是一本很好的数据库入门书籍，适合新手了解数据库的基本概率和简单的数据库操作</div>-->
+                        </td>
+                        <td >
+                            <div style="margin-top: 10%" th:if="${book.bookStatus} eq 'onSale'">
+                                <button  th:onclick="changeStatus('putOff',[[${book.bookId}]])"  style="height: 30%!important;" class="button is-danger" >下架书籍</button>
+                            </div>
+                            <div style="margin-top: 10%!important;">
+                                <button th:onclick="save([[${book.bookId}]])" style="height: 30%!important;" class="button is-success" >保存修改</button>
+                            </div>
+                            <div style="margin-top: 10%!important;" th:if="${book.bookStatus} ne 'onSale'">
+                                <button th:onclick="deleteBook([[${book.bookId}]])" style="height: 30%!important;" class="button is-link" >删除商品</button>
+                            </div>
+                            <div style="margin-top: 10%!important;" th:if="${book.bookStatus} eq 'putOff'">
+                                <button style="height: 30%!important;" class="button is-link" >上架书籍</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr style="background-color:#ffffe5;">
+                        <td><input type="checkbox" class="checkbox"></td>
+                        <td >
+                            <div style="display: flex;">
+                                <div style="width: 20%">全选</div>
+                                <button class="button is-danger" style="margin-left: 10%;height: 50%;"  th:onclick="javascript:changeStatus(pullOff)">批量下架</button>
+                            </div>
+                        </td>
+                        <td colspan="6">
+                            <div >
+                                <ul class="pagination pull-right no-margin">
+                                    <!-- 首页 -->
+                                    <li>
+                                        <a th:href="'/org/getBooksByStatus?pageNum=1&status='+${status}">首页</a>
+                                    </li>
+                                    <!-- 上一页 -->
+                                    <li th:if="${result.hasPreviousPage}">
+                                        <a th:href="'/org/getBooksByStatus?pageNum=' + ${result.prePage}+'&status='+${status}" th:text="上一页"></a>
+                                    </li>
+                                    <!-- 中间页 -->
+                                    <li th:each="pages:${result.navigatepageNums}">
+                                        <a th:href="'/org/getBooksByStatus?pageNum=' + ${pages}+'&status='+${status}" th:text="${pages}" ></a>
+                                        <!--                            <a th:href="'/org/checkinglist?pageNum=' + ${pages}" th:text="${pages}" th:if="${pages eq pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
+                                    </li>
+                                    <!-- 下一页 -->
+                                    <li th:if="${result.hasNextPage}">
+                                        <a th:href="'/org/getBooksByStatus?pageNum=' + ${result.nextPage}+'&status='+${status}" th:text="下一页"></a>
+                                    </li>
+                                    <!-- 尾页 -->
+                                    <li>
+                                        <a th:href="'/org/getBooksByStatus?pageNum=' + ${result.size}+'&status='+${status}">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- 页脚部分 -->
+    <section id="footer" th:replace="fragments :: foot"></section>
+    <script type="text/javascript">
+        //修改图书在库状态
+        function changeStatus(status,bookId) {
+            layer.confirm('确定要下架这本书吗？',{
+                btn:['确认','取消']
+            },function (){
+                //确认时进行的操作
+                var data = [];
+                data.push(status);
+                data.push(bookId);
+                var URL = '/org/changeBookStatus';
+                processingData(data,URL);
+            },function () {
+
+            })
+        }
+
+        //保存修改信息
+        function save(bookId) {
+            layer.confirm('确定保存修改吗？',{
+                btn:['确认','取消']
+            },function () {
+                //组装数据
+                var data = [];
+                data.push(bookId);
+                //拼接name
+                var amountInputName = bookId+"Amount";
+                var priceInputName = bookId+"Price";
+                var descriptionName = bookId+"Description";
+                //放入数据
+                data.push(document.getElementsByName(amountInputName)[0].value);
+                data.push(document.getElementsByName(priceInputName)[0].value);
+                data.push(document.getElementsByName(descriptionName)[0].value);
+                //数据处理
+                var URL = '/org/saveChanges';
+                processingData(data,URL);
+            },function () {
+
+            })
+
+        }
+
+        //删除图书信息
+        function deleteBook(bookId) {
+            layer.confirm('确定删除书籍吗？',{
+                btn:['确认','取消']
+            },function () {
+                //组装数据
+                var data = [];
+                data.push(bookId);
+                //数据处理
+                var URL = '/org/deleteBook';
+                processingData(data,URL);
+            },function () {
+
+            })
+        }
+
+        //数据处理
+        function processingData(data,URL) {
+            $.ajax({
+                type:'post',
+                url:URL,
+                contentType:"application/json",
+                data:JSON.stringify(data),
+                success:function (message) {
+                    layer.msg(message,{
+                        time:3000,
+                        btn:['确认']
+                    },function () {
+                        location.reload(true);
+                        // location.replace("/org/checkinglist?pageNum=1");
+                    })
+                }
+            })
+        }
+
+        //监测从后台获取的可编辑文字、键盘输入的文字字数的变化，并赋值给span
+        // $(function(){
+        //     $('textarea').on('input propertychange', function(){
+        //         var _length = $(this).val().length;
+        //         $('.count-change').html(_length);
+        //     });
+        // });
+    </script>
 </body>
 </html>

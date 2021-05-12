@@ -9,14 +9,18 @@ import com.example.demo.service.RecordsService;
 import com.example.demo.util.GeneralUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -117,12 +121,66 @@ public class RecordsServiceImpl implements RecordsService {
         return bookUploadRecords;
     }
 
+
+    /**
+    * @Description: 插入一条新记录
+    * @Param: [org, bookName, author, language, publisher, edition, cip, avart]
+    * @return: java.lang.String
+    * @Author: chenjiajun
+    * @Date: 2021/4/29
+    */
     @Override
-    public int updateUploadRecords(BookUploadRecords bookUploadRecords) {
-       return bookUploadRecordsMapper.updateByPrimaryKey(bookUploadRecords);
+    public String insertUploadRecords(Organization org, String bookName, String author, String language,
+                                      String publisher, String edition, String cip, MultipartFile avart,
+                                      BookUploadRecords bookUploadRecords) {
+        //参数
+        Date date = new Date();
+        SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd :hh:mm:ss");
+        dateFormat.format(date);
+        //先插入一个条不含图的记录
+        BookUploadRecords bupr = new BookUploadRecords(date,org.getOrgId(),org.getOrgName(),bookName,author,language,publisher,edition,cip,"审核中",date);
+        bupr.setRecordsDataStatus(true);
+
+        //再按照获取的id给图片重新命名再修改记录
+        bupr = uploadRecords(bupr);
+
+        //图片处理逻辑
+        //如果是重新申请提交记录且没有改变图片的话，对图片进行覆盖操作
+        if (bookUploadRecords != null && avart.isEmpty()){
+            bupr.setRecordsBookCover(bookUploadRecords.getRecordsBookCover());
+        }
+        //对于是第一次上传的，直接解析图片
+        //将图片文件存储在指定文件，并进行重命名，以记录id为名
+        else  if (!avart.isEmpty()){
+            try {
+                BufferedOutputStream outputStream = new BufferedOutputStream(
+                        new FileOutputStream( new File("E:\\localImg\\"+bupr.getRecordsId().toString()+".jpg")));//图片保存路径，暂时用本地路径来进行演示
+                outputStream.write(avart.getBytes());
+                outputStream.flush();
+                outputStream.close();
+                bupr.setRecordsBookCover(bupr.getRecordsId().toString()+".jpg");
+            } catch (IOException e) {
+                e.printStackTrace();
+                //返回数据处理结果
+                return "内部错误！请稍后再试！";
+            }
+        }
+        //最后进行记录更新
+        if(bookUploadRecordsMapper.updateByPrimaryKey(bupr) == 0)
+            return  "内部错误！请稍后再试！";
+        else {
+            return"上传成功！";
+        }
     }
 
 
+    /**
+    * @Description: 按条件分页获取所有记录
+    * @Param: [orgid, status, pageNum, pageSize, dataStatus]
+    * @return: com.github.pagehelper.PageInfo<com.example.demo.domain.BookUploadRecords>
+    * @Author: chenjiajun
+    * @Date: 2021/4/29
+    */
     @Override
     public PageInfo<BookUploadRecords> getOrgUploadRecordsByStatus(Long orgid, String status,
                                                                    int pageNum, int pageSize,Boolean dataStatus) throws ParseException {
@@ -133,25 +191,34 @@ public class RecordsServiceImpl implements RecordsService {
         return GeneralUtil.DataPre(list);
     }
 
+    /**
+    * @Description: 分页获取所有记录
+    * @Param: [orgId, pageNum, pageSize]
+    * @return: com.github.pagehelper.PageInfo<com.example.demo.domain.BookUploadRecords>
+    * @Author: chenjiajun
+    * @Date: 2021/4/29
+    */
     public PageInfo<BookUploadRecords> getAllUploadRecordPages(Long orgId, int pageNum,int pageSize){
         PageHelper.startPage(pageNum,pageSize);
         List<BookUploadRecords> list = bookUploadRecordsMapper.selectAllByStatus(orgId, true);
         return GeneralUtil.DataPre(list);
     }
+    
 
+    /**
+    * @Description: 按照orgid 和 reocrdsId获取对象
+    * @Param: [orgId, recordsId]
+    * @return: com.example.demo.domain.BookUploadRecords
+    * @Author: chenjiajun
+    * @Date: 2021/4/29
+    */
     @Override
-    public BookUploadRecords getBookUploadsById(Long recordsId) {
-        return bookUploadRecordsMapper.selectOneById(recordsId);
+    public BookUploadRecords getBookUploadsById(Long orgId, Long recordsId) {
+        BookUploadRecords bookUploadRecords = bookUploadRecordsMapper.findOne(orgId,recordsId);
+        //进行图片路径处理
+//        if (bookUploadRecords != null)bookUploadRecords.setRecordsBookCover(GeneralUtil.imagUrl(bookUploadRecords.getRecordsBookCover()));
+        return bookUploadRecords;
     }
-
-
-//    //重载全选方法
-//    public PageInfo<BookUploadRecords> getAllUploadRecords(Long orgid,int pageNum,int pageSize,Boolean dataStatus){
-//        //进行分页查询
-//        PageHelper.startPage(pageNum,pageSize);
-//        List<BookUploadRecords> list = bookUploadRecordsMapper.selectAllByStatus(orgid,dataStatus);
-//        return GeneralUtil.DataPre(list);
-//    }
 
     /**
     * @Description: 将指定多条数据进行改变数据状态的操作，传入操作人姓名，同时更新操作时间
@@ -192,8 +259,16 @@ public class RecordsServiceImpl implements RecordsService {
         }
     }
 
+
+    /**
+    * @Description: 根据记录id获取到该条记录，并返回到修改界面
+    * @Param: [model, recordsId]
+    * @return: java.lang.String
+    * @Author: chenjiajun
+    * @Date: 2021/4/29
+    */
     @Override
-    public String getBookUploadsByid(Model model,Long recordsId) {
+    public String getBookUploadsForMod(Model model,Long recordsId) {
         BookUploadRecords bookUploadRecords = bookUploadRecordsMapper.selectOneById(recordsId);
         if (bookUploadRecords != null){
             String s = "/localImg/"+bookUploadRecords.getRecordsBookCover();
