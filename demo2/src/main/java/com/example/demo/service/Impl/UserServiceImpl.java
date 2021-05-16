@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
         if(u == null){
             redirectAttributes.addFlashAttribute("errorInfo","用户名或者密码错误");
 //            model.addAttribute("errorInfo","用户名或者密码错误");
-            return "redirect:/login";
+            return "redirect:login";
         }
         u.setUserPassword("");
         //将用户对象和用户类型传入会话域中

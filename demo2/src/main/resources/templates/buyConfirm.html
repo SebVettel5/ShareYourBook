@@ -31,7 +31,10 @@
                                 <!--遍历列出用户下所有地址-->
                                 <div  class="full_flex">
                                     <!--地址信息区域-->
-                                    <div th:each="address : ${locations}" class="location_area" style="background-image: url('../static/css/images/locationBg.png');">
+                                    <div th:each="address : ${session.locations}" class="location_area" style="background-image: url('../static/css/images/locationBg.png');"
+                                      th:data-rec="${address.addressRecipients}" th:data-phone="${address.addressPhone}" th:data-info="${address.addressInfo}" th:data-id="${address.addressId}"
+                                         th:onclick="changeAddress(this.getAttribute('data-rec'),this.getAttribute('data-phone'),this.getAttribute('data-info'),this.getAttribute('data-id'))"
+                                        th:id="${address.addressId}">
                                         <div class="location_item_content">
                                             <div style="display: flex;margin-top: 1%">
                                                 <div class="small_weight_font">收件人:</div>
@@ -61,35 +64,37 @@
                                         <div class="order_book_info_title" style="width: 15%">邮费</div>
                                         <div class="order_book_info_title" style="width: 15%">小计</div>
                                     </div>
-                                    <div th:each="item,orgList:${bookMap}"><!--这里遍历机构-->
+                                    <div th:each="item,order:${session.orderMap}"><!--这里遍历机构-->
                                         <div ><!--这里遍历机构书籍-->
                                             <!--店铺标题-->
                                             <div class="full_flex " style="border-bottom: 1px dotted #80b2ff;">
                                                 <div  class="order_storeName">店铺:</div>
-                                                <a th:text="${orgList.current.key}" class="order_storeName">时代云图</a>
+                                                <a th:text="${order.current.key.orgName}" class="order_storeName">时代云图</a>
                                             </div>
                                             <!--这里是返回一系列的付款图书，因为可能有许多图书要买-->
                                             <!-- item是遍历的标志，即键值对的键，bookStat为值，可以通过被遍历的值反过来获取到key,value-->
-                                            <div th:each="item,bookList:${orgList.current.value}" class="full_flex store_book_contain" style="border-bottom: 1px dotted rgb(221, 221, 221);">
+                                            <div th:each="bookOrder:${order.current.value}" class="full_flex store_book_contain" style="border-bottom: 1px dotted rgb(221, 221, 221);">
                                                 <div style="width: 25%;display: flex">
                                                     <div style="width: 25%;">
-                                                        <img th:src="${bookList.current.key.bookCover}" src="../static/css/images/upload-records.png"/>
+                                                        <img th:src="${bookOrder.bookPic}" src="../static/css/images/upload-records.png"/>
                                                     </div>
-                                                    <div th:text="${bookList.current.key.bookName}" style="font-size: small;margin-left: 2%;width: 80%;color: black">数据库基础</div>
+                                                    <div th:text="${bookOrder.bookName}" style="font-size: small;margin-left: 2%;width: 80%;color: black">数据库基础</div>
+                                                    <div style="display: none" th:text="${bookOrder.bookId}" id="bookId"></div>
+
                                                 </div>
-                                                <div th:id="${bookList.current.key.bookId}+'bookPrice'" th:text="${bookList.current.key.bookPrice}" class="store_book">0.25</div>
+                                                <div th:id="${bookOrder.bookId}+'bookPrice'" th:text="${bookOrder.bookPrice}" class="store_book">0.25</div>
                                                 <!--书籍数量-->
-                                                <div th:id="${bookList.current.key.bookId}+'bookAmount'" th:text="${bookList.current.value}" class="store_book full_flex" style="padding: 4px">1</div>
+                                                <div th:id="${bookOrder.bookId}+'bookAmount'" th:text="${bookOrder.bookAmount}" class="store_book full_flex" style="padding: 4px">1</div>
                                                 <!--使用天数-->
                                                 <div class="store_book" style="padding: 4px">
-                                                    <button name="days_minus" class="store_button" th:onclick="'javascript:changeDaysMinus('+${bookList.current.key.bookId}+')'">-</button>
-                                                    <input th:id="${bookList.current.key.bookId}+'days'" class="store_amount_input" value="1">
-                                                    <button name="days_plus" class="store_button"  th:onclick="'javascript:changeDaysPlus('+${bookList.current.key.bookId}+')'">+</button>
+                                                    <button name="days_minus" class="store_button" th:onclick="'javascript:changeDaysMinus('+${bookOrder.bookId}+','+${order.current.key.orgId}+')'">-</button>
+                                                    <input name="bookDay" th:id="${bookOrder.bookId}+'days'" class="store_amount_input" th:value="${bookOrder.bookDays}" th:onchange="'reCalculate('+${bookOrder.bookId}+',value,'+${order.current.key.orgId}+')'">
+                                                    <button name="days_plus" class="store_button"  th:onclick="'javascript:changeDaysPlus('+${bookOrder.bookId}+','+${order.current.key.orgId}+')'">+</button>
                                                 </div>
-                                                <div th:id="${bookList.current.key.bookId}+'postage'" class="store_book">8.00</div>
+                                                <div  th:id="${bookOrder.bookId}+'postage'" class="store_book" th:text="${bookOrder.bookPostage}">8.00</div>
                                                 <div  class="store_book flex_left" style="color: red;font-weight: 800" >
                                                     <div>￥:</div>
-                                                    <div th:id="${bookList.current.key.bookId}+'curSubTotal'">1.25</div>
+                                                    <div th:text="${bookOrder.curSubTotal}" th:id="${bookOrder.bookId}+'curSubTotal'" name="bookTotal">1.25</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,7 +113,7 @@
                                             <!--费用计算-->
                                             <div class="full_flex flex_left" >
                                                 <div class="small_font">合计费用(含运费):</div>
-                                                <div class="small_pay_count">￥:1.25</div>
+                                                <div th:text="${order.current.key.orgCurSubTotal}" th:id="${order.current.key.orgId}" class="small_pay_count" name="orgTotal">￥:1.25</div>
                                             </div>
                                         </div>
                                     </div>
@@ -119,20 +124,24 @@
                                             <div class="full_flex settlement_area flex_left">
                                                 <div class="full_flex flex_left">
                                                     <div class="small_font">实付款</div>
-                                                    <div class="big_pay_count">￥:9.5</div>
+                                                    <div>￥:</div>
+                                                    <div id="totalSub" th:text="${orderSub}" class="big_pay_count">9.5</div>
+                                                    <form id="subForm">
+                                                        <input id="totalSubInput" name="totalSub"  th:value="${orderSub}" style="display: none" required="required">
+                                                    </form>
                                                 </div>
-                                                <div class="full_flex flex_left">
-                                                    <div class="small_font">寄送至:</div>
-                                                    <div>湖南省</div>
+                                                <div class=" flex_left" >
+                                                    <div class="small_font" style="width: 20%">地址:</div>
+                                                    <div id="locationInfo"></div>
                                                 </div>
-                                                <div class="full_flex flex_left">
+                                                <div class="full_flex flex_left" style="width: 80%">
                                                     <div class="small_font">收件人:</div>
-                                                    <div>陈家俊 13789083230</div>
+                                                    <div id="recipient"></div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="full_flex flex_left">
-                                            <button class="order_sub_btn">提交订单</button>
+                                            <button class="order_sub_btn" onclick="submitBookInfo()" id="subBtn" type="submit">提交订单</button>
                                         </div>
                                     </div>
                                 </div>
@@ -145,6 +154,11 @@
                 <div th:replace="fragments :: script"></div>
         </div>
     <script>
+        window.onload=function(){
+            //未选择地址时按钮设置不可用
+            $("#subBtn").attr("disabled","true");
+        }
+
         $(function(){
             $('textarea').on('input propertychange', function(){
                 var _length = $(this).val().length;
@@ -153,26 +167,27 @@
         });
 
         //借阅天数增加按钮
-        function changeDaysMinus(inputName) {
+        function changeDaysMinus(inputName,subId) {
             var item = inputName+"days";
             // 改变input值
             var curVal = parseInt($("#"+item).val()) -1 ;
-            if (curVal < 0)curVal=0;
+            if (curVal < 1)curVal=1;
             $("#"+item).val(curVal);
             //费用重新计算
-            reCalculate(inputName,curVal);
+            reCalculate(inputName,curVal,subId);
         }
 
         //借阅天数减少按钮
-        function changeDaysPlus(inputName) {
+        function changeDaysPlus(inputName,subId) {
             var item = inputName+"days";
             // alert(item);
             var curVal =  parseInt($("#"+item).val()) +1;
             $("#"+item).val(curVal);
-            reCalculate(inputName,curVal);
+            reCalculate(inputName,curVal,subId);
         }
 
-        function reCalculate(inputName,curVal) {
+        //改变订单信息时进行金额的重新计算
+        function reCalculate(inputName,curVal,subId) {
             //计算邮费
             if (curVal > 30){
                 $("#"+inputName+"postage").text("0.00");
@@ -180,15 +195,102 @@
             else{
                 $("#"+inputName+"postage").text("8.00");
             }
-            //当前小计
+            //变更前的当前小计
             var originalCurSubTotal = parseFloat($("#"+inputName+"curSubTotal").text());
+            //获取邮费
+            var bookPostage = parseFloat($("#"+inputName+"postage").text());
             //获取书籍价格
             var bookPrice = parseFloat($("#"+inputName+"bookPrice").text());
             //获取书籍数量
             var bookAmount = parseFloat($("#"+inputName+"bookAmount").text());
-            $("#"+inputName+"curSubTotal").text(bookPrice*bookAmount);
+            //更新该行的结算信息
+            $("#"+inputName+"curSubTotal").text(bookPrice*bookAmount*curVal+bookPostage);
+            //更新当前店铺的结算信息
+            var change = parseFloat(parseFloat($("#"+inputName+"curSubTotal").text())-originalCurSubTotal);
+            //获取原机构的总计
+            var originalOrgSubTotal = parseFloat($("#"+subId).text());
+            $("#"+subId).text(originalOrgSubTotal+change);
+            //获取原总计
+            var originalTotalSub = parseFloat($("#totalSub").text());
+            $("#totalSub").text(originalTotalSub+change);
+            $("#totalSubInput").val(originalTotalSub+change);
         }
 
+        //选中地址改变总结算栏信息
+        var lastLocation = "";
+        function changeAddress(rec,phone,info,divId) {
+            if (lastLocation != ""){
+                $("#"+lastLocation).css({"border":"none"})
+            }
+            //显示选中的边框
+            $("#"+divId).css({"border":"2px solid #ff0036"});
+            //记住上一次选中的id
+            lastLocation = divId;
+            //改变结算界面的内容
+            $("#locationInfo").text(info);
+            $("#recipient").text(rec+" "+phone);
+            //结算按钮设置为可用
+            $("#subBtn").removeAttr("disabled");
+            // //传入地址id
+            // $("#orderLocation").val(divId);
+        }
+        
+        function submitBookInfo() {
+            //回传的书籍数组
+            var bookIds = [];
+            //回传的数量数组
+            var bookDays = [];
+            //回传机构订单备注信息
+            var orgNotices = [];
+            //回传机构订单金额
+            var orgTotals = [];
+            //回传地址
+            var location = [];
+            //获取所有同名元素的值
+            var bookId = $('[id=bookId]');
+            var bookDay = $('[name=bookDay]');
+            var orgNotice = $('[name=notice]');
+            var orgTotal = $('[name=orgTotal]');
+            //书籍信息组装
+            for(var i = 0;i < bookId.length;i++){
+                bookIds.push($(bookId).text());
+                bookDays.push($(bookDay).val());
+            }
+            //机构订单信息
+            location.push(lastLocation);
+            for(var i = 0;i<orgNotice.length;i++){
+                orgNotices.push($(orgNotice).val());
+                orgTotals.push($(orgTotal).text());
+            }
+
+            //结果封装
+            var orderResult = [];
+            orderResult.push(bookIds);
+            orderResult.push(bookDays);
+            orderResult.push(orgNotices);
+            orderResult.push(orgTotals);
+            orderResult.push(location);
+
+
+            alert(orderResult);
+
+
+            //通过ajax请求将部分订单信息回传
+            $.ajax({
+                type:'post',
+                url:'/order/buildOrderRecords',
+                contentType:"application/json",
+                data:JSON.stringify(orderResult),
+                success:function (message) {
+                    //subForm表单提交
+                    var form = document.getElementById("subForm");
+                    form.action="/order/settleOrder";
+                    form.submit();
+                }
+            });
+
+
+        }
     </script>
 	</body>
 </html>

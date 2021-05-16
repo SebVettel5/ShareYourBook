@@ -44,6 +44,7 @@ public class controller {
      * @Date: 2021/2/19
      */
      @RequestMapping("/hello")
+     @ResponseBody
      public String hello(){
          return "hello";
      }
@@ -157,4 +158,5 @@ public class controller {
         list.add(book);
         return list;
     }
+
 }

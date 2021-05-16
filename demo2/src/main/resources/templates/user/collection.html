@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head >
+    <meta charset="UTF-8">
+    <title>user|collection</title>
+    <link rel="stylesheet" href="../../static/css/mystyle.css">
+    <link rel="stylesheet" href="../../static/css/table.css">
+    <script src="../../static/js/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="../../static/layer/layer.js"></script>
+</head>
+<body>
+<div>
+    <!--标题-->
+    <div class="user_order_title">收藏书籍</div>
+    <div class="slice_line"></div>
+    <!--表头-->
+    <div class="full_flex">
+        <div class="order_book_info_title" style="width: 1%"></div>
+        <div class="order_book_info_title" style="width: 10%"></div>
+        <div class="order_book_info_title" style="width: 30%">书籍信息</div>
+        <div class="order_book_info_title" style="width: 15%">数量</div>
+        <div class="order_book_info_title" style="width: 15%">天数</div>
+        <div class="order_book_info_title" style="width: 10%">单价</div>
+        <div class="order_book_info_title" style="width: 10%">邮费</div>
+        <div class="order_book_info_title" style="width: 10%">小计</div>
+    </div>
+    <!--遍历内容-->
+    <div th:each="cartWrapper:${cartResult.list}">
+        <div style="width: 1%"><input type="checkbox" name="orgOrderId" th:value="${cartWrapper.cartItem.cartId}"></div>
+        <!--遍历书籍-->
+        <div class="full_flex book_order light_font" >
+            <div style="width: 10%;">
+                <img src="../../static/css/images/iconmonstr-book-20-240.png" th:src="${cartWrapper.book.bookCover}">
+            </div>
+            <div style="width: 30%" class="user_order_contain user_order_book_info">
+                <div th:text="'书名：'+${cartWrapper.book.bookName}">书名:数据库原理</div>
+                <div th:text="'作者：'+${cartWrapper.book.bookAuthor}">作者：王珊</div>
+                <div th:text="'出版社：'+${cartWrapper.book.bookPublisher}">出版社:高等教育出版社</div>
+                <div th:text="'版次：'+${cartWrapper.book.bookEdition}">版次：第一版第一次</div>
+            </div>
+            <div  style="width: 15%;text-align: center" class="user_order_contain">
+                <button th:onclick="'minusBookAmount('+${cartWrapper.cartItem.cartId}+')'" name="days_minus" class="button is-info">-</button>
+                <input th:onchange="'changeCart(value,'+${cartWrapper.cartItem.cartId}+')'" th:id="${cartWrapper.cartItem.cartId}+'Amount'" name="bookAmount" th:value="${cartWrapper.cartItem.cartBookAmount}" class="collection_input">
+                <button th:onclick="'plusBookAmount('+${cartWrapper.cartItem.cartId}+','+${cartWrapper.book.bookAmount}+')'" name="days_plus" class="button is-info">+</button>
+            </div>
+            <div  style="width: 15%" class="user_order_contain">
+                <button th:onclick="'minusBookDays('+${cartWrapper.cartItem.cartId}+')'"  name="days_minus" class="button is-info">-</button>
+                <input th:onchange="'changeCart(value,'+${cartWrapper.cartItem.cartId}+')'" th:id="${cartWrapper.cartItem.cartId}+'Days'" name="bookDay" th:value="${cartWrapper.cartItem.cartBookDays}"   class="collection_input">
+                <button th:onclick="'plusBookDays('+${cartWrapper.cartItem.cartId}+')'" name="days_plus" class="button is-info" >+</button>
+            </div>
+            <div th:id="${cartWrapper.cartItem.cartId}+'price'" th:text="${cartWrapper.book.bookPrice}" style="width: 10%" class="user_order_contain">0.15</div>
+            <div th:id="${cartWrapper.cartItem.cartId}+'postage'" th:text="${cartWrapper.cartItem.cartPostage}"  style="width: 10%" class="user_order_contain">8.00</div>
+            <div th:id="${cartWrapper.cartItem.cartId}+'sub'" style="width: 10%;color: red"class="user_order_contain" th:text="${#numbers.formatDecimal(cartWrapper.cartItem.cartBookAmount*cartWrapper.cartItem.cartBookDays*cartWrapper.book.bookPrice+cartWrapper.cartItem.cartPostage,1,2)}">8.75</div>
+        </div>
+        <!--合计-->
+
+    </div>
+<!--    <div class="full_flex flex_left book_order_count">-->
+<!--        <div>总计(含运费)</div>-->
+<!--        <div style="color: red;font-weight: 800;">18.5</div>-->
+<!--    </div>-->
+    <div class="slice_line"></div>
+
+    <div>
+        <button class="button is-danger" onclick="cancelCart()">取消收藏</button>
+        <button class="button is-success" onclick="goPay()">去付款</button>
+    </div>
+    <ul class="pagination pull-right no-margin">
+        <!-- 首页 -->
+        <li>
+            <a th:href="'/user/getCart?pageNum=1'">首页</a>
+        </li>
+        <!-- 上一页 -->
+        <li th:if="${cartResult.hasPreviousPage}">
+            <a th:href="'/user/getCart?pageNum=' + ${cartResult.prePage}" th:text="上一页"></a>
+        </li>
+        <!-- 中间页 -->
+        <li th:each="pages:${cartResult.navigatepageNums}">
+            <a th:href="'/user/getCart?pageNum=' + ${pages}" th:text="${pages}" ></a>
+            <!--                            <a th:href="'/org/checkinglist?pageNum=' + ${pages}" th:text="${pages}" th:if="${pages eq pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
+        </li>
+        <!-- 下一页 -->
+        <li th:if="${cartResult.hasNextPage}">
+            <a th:href="'/user/getCart?pageNum=' + ${cartResult.nextPage}" th:text="下一页"></a>
+        </li>
+        <!-- 尾页 -->
+        <li>
+            <a th:href="'/user/getCart?pageNum=' + ${cartResult.size}">尾页</a>
+        </li>
+    </ul>
+</div>
+<script>
+    function cancelCart() {
+        var orderIds = [];
+        //接受所有选择的订单的id
+        $("input[name='orgOrderId']:checked").each(function (i) {
+            orderIds.push($(this).val());
+        });
+        //没有任何被选中则给出弹窗提醒
+        if (orderIds.length == 0){
+            layer.msg("未选中订单！");
+            return;
+        }else {
+            layer.confirm('确定要取消收藏吗？',{
+                btn:['确认','取消']
+            },function () {
+                processingData(orderIds, '/user/cancelCart',1);
+            },function () {
+                
+            })
+        }
+    }
+
+    function goPay() {
+        var orderIds = [];
+        //接受所有选择的订单的id
+        $("input[name='orgOrderId']:checked").each(function (i) {
+            orderIds.push($(this).val());
+        });
+        //没有任何被选中则给出弹窗提醒
+        if (orderIds.length == 0){
+            layer.msg("未选中订单！");
+            return;
+        }else {
+                processingData(orderIds, '/user/goPayCart',1);
+                parent.location.href = "/buyConfirm";
+        }
+    }
+
+    function minusBookAmount(cartId) {
+        var item = cartId+"Amount";
+        // 改变input值
+        var curVal = parseInt($("#"+item).val()) -1 ;
+        if (curVal < 1)curVal=1;
+        $("#"+item).val(curVal);
+        changeCart(curVal,cartId);
+    }
+
+    function plusBookAmount(cartId,bookAmount) {
+        var item = cartId+"Amount";
+        // 改变input值
+        var curVal = parseInt($("#"+item).val()) +1 ;
+        if (curVal>bookAmount){
+            curVal = bookAmount;
+            layer.msg("已达到最大值")
+        }
+        $("#"+item).val(curVal);
+        changeCart(curVal,cartId);
+    }
+
+    function changeCart(value,carId) {
+        var data = [];
+        //通过ajax提交对cart的更改
+        //更新小计
+        // var subDiv = "#"+carId+"sub";
+        //获取三个计算小计的变量
+        var price = parseFloat($("#"+carId+"price").text());
+        var amount =  parseFloat($("#"+carId+"Amount").val());
+        var days =  parseFloat($("#"+carId+"Days").val());
+        var postage =  parseFloat($("#"+carId+"postage").text());
+        if (parseInt(days)>30){
+            $("#"+carId+"postage").text('0.0');
+        }
+        else{
+            $("#"+carId+"postage").text('8.0');
+        }
+        $("#"+carId+"sub").text((price*amount*days+postage).toFixed(2));
+        data.push(carId,amount,days,postage);
+        url = "/user/updateCart";
+        processingData(data,url);
+    }
+
+    function minusBookDays(cartId) {
+        var item = cartId+"Days";
+        // 改变input值
+        var curVal = parseInt($("#"+item).val()) -1 ;
+        if (curVal < 1)curVal=1;
+        $("#"+item).val(curVal);
+        changeCart(curVal,cartId);
+    }
+
+    function plusBookDays(cartId) {
+        var item = cartId+"Days";
+        // 改变input值
+        var curVal = parseInt($("#"+item).val()) +1 ;
+        $("#"+item).val(curVal);
+        changeCart(curVal,cartId);
+    }
+
+    function processingData(data,url,type) {
+        $.ajax({
+            type:'post',
+            url:url,
+            contentType:"application/json",
+            data:JSON.stringify(data),
+            success:function (message) {
+                if (type == 1 ){
+                    layer.msg(message,{
+                        time:3000,
+                        btn:['确认']
+                    },function () {
+                        location.reload(true);
+                    })
+                }
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

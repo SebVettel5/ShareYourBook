@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.BookOrderMapper">
+    <select id="getAllByIdAndStatus" resultType="com.example.demo.domain.BookOrders">
+        select
+            *
+        from
+            bookorders
+        where
+            book_order_org_order_id = #{orderNo}
+           and
+            book_order_user_id = #{userId}
+           and
+            book_order_data_status = #{dataStatus}
+    </select>
+    <update id="getConfirmOrders">
+        update
+            bookorders
+         set
+            book_order_user_get_time = #{date},
+            book_order_remind_days = book_order_book_days
+         where
+            book_order_user_id = #{userId}
+          and
+            book_order_org_order_id in (
+                <foreach collection="list" item="id" open="" close="" separator=",">
+                    #{id}
+                </foreach>
+            )
+    </update>
+    <update id="updateBackInfo">
+        update
+            bookorders
+        set
+            book_order_user_back_time = #{date},
+            book_order_back_post_name = #{postName},
+            book_order_back_post_no = #{postNo}
+        where
+            book_order_id = #{bookOrderId}
+    </update>
+</mapper>

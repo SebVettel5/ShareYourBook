@@ -17,7 +17,7 @@ public class Book {
     @Id
     private Long bookId;
     private Long bookOrgId;
-    private String bookCipId;
+    private String bookCpiId;
     private String bookCover;
     private String bookEdition;
     private String bookPublisher;

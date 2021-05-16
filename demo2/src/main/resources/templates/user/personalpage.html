@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>sharebook|personalpage</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../static/css/layui.css" media="all">
+<!--    <link rel="stylesheet" href="../static/css/laydate.css">-->
+    <link rel="stylesheet" href="../../static/css/main.css" />
+    <script src="../../static/js/jquery-3.6.0.js"></script>
+
+</head>
+<body class="personalpage is-preload">
+<div id="page-wrapper">
+
+    <!-- 页首部分 -->
+    <section id="header">
+        <div class="container">
+            <!-- Logo -->
+            <h1 id="title">个人中心</h1>
+            <!-- 导航栏 -->
+            <nav id="nav" th:replace="fragments :: nav"></nav>
+        </div>
+    </section>
+    <!-- 内容部分 -->
+    <section id="main">
+        <div class="container">
+            <div class="row">
+                <!-- 左侧快捷导航 -->
+                <div id="sidebar" class="col-41 col-12-medium">
+                    <!-- Excerpts -->
+                    <section>
+                        <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="demo" style="margin-right: 10px;">
+                            <li class="layui-nav-item layui-nav-itemed">
+                                <a href="javascript:;">我的读书</a>
+                                <dl class="layui-nav-child">
+                                    <dd><a href="/user/getOrders?pageNum=1&orderStatus=waitPay" onclick="fun(pre,'waitPay')" target="myFrame">未支付</a></dd>
+                                    <dd><a href="/user/getOrders?pageNum=1&orderStatus=havePay" onclick="fun(pre,'havePay')" target="myFrame">待发货</a></dd>
+                                    <dd><a href="/user/getOrders?pageNum=1&orderStatus=onTrans" onclick="fun(pre,'onTrans')" target="myFrame">运输中</a></dd>
+                                    <dd><a href="/user/getOrders?pageNum=1&orderStatus=reading" onclick="fun(pre,'reading')" target="myFrame">阅读中</a></dd>
+                                    <dd><a href="/user/getHistoryOrders?pageNum=1" onclick="fun(pre,'historyOrders')" target="myFrame">历史订单</a></dd>
+                                    <dd><a href="/user/getCart?pageNum=1" onclick="fun(pre,'collectionBooks')" target="myFrame">收藏书籍</a></dd>
+                                </dl>
+                            </li>
+                            <li class="layui-nav-item">
+                                <a href="javascript:;">评论</a>
+                                <dl class="layui-nav-child">
+                                    <dd><a href="#">我发出的</a></dd>
+                                    <dd><a href="#">回复我的</a></dd>
+                                </dl>
+                            </li>
+                            <li class="layui-nav-item">
+                                <a href="javascript:;">设置</a>
+                                <dl class="layui-nav-child">
+                                    <dd><a href="javascript:void(0);" onclick="fun(pre,'personalInfo')">个人信息管理</a></dd>
+                                    <dd><a href="#">地址管理</a></dd>
+                                    <dd><a href="#">押金</a></dd>
+                                </dl>
+                            </li>
+                            <li class="layui-nav-item"><a href="#">书友圈</a></li>
+                            <li class="layui-nav-item"><a href="#">联系我们</a></li>
+                        </ul>
+                    </section>
+                </div>
+
+                <!-- 右侧信息部分 -->
+                <div id="content" class="col-8 col-12-medium imp-medium" style="">
+                    <iframe scrolling="no" style="width: 100%;overflow: visible" name="myFrame" id="myFrame"></iframe>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚部分 -->
+    <section id="footer" th:replace="fragments :: foot"></section>
+</div>
+<div th:replace="fragments :: script"></div>
+<script src="../../static/js/layui.js" charset="utf-8"></script>
+<script id="1">
+    //侧边栏选择方法
+    var pre = "original";
+    function fun(p,cur) {
+        pre = cur;
+    }
+    //iFrame调整函数
+    window.onresize = function () {
+        reinitIframe();
+    }
+    function reinitIframe(){
+        var iframe = document.getElementById("myFrame");
+        var div = document.getElementById("content");
+        try{
+            var bHeight = iframe.contentWindow.document.body.scrollHeight;
+            var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+            var height = Math.min(bHeight, dHeight);
+            iframe.height = height+50;
+            div.height = parseInt(iframe.height+50);
+        }catch (ex){}
+    }
+    window.setInterval("reinitIframe()", 100);
+
+</script>
+</body>
+</html>

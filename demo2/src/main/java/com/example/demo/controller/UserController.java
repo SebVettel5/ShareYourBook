@@ -4,22 +4,20 @@ import com.example.demo.ViewObject.OrdersWrapper;
 import com.example.demo.ViewObject.SingleBookOrderWrapper;
 import com.example.demo.ViewObject.SingleOrgOrderWrapper;
 import com.example.demo.domain.Book;
+import com.example.demo.domain.Cart;
 import com.example.demo.domain.Organization;
-import com.example.demo.service.Impl.AddressServiceImpl;
-import com.example.demo.service.Impl.BookServiceImpl;
-import com.example.demo.service.Impl.OrganizationServiceImpl;
+import com.example.demo.mapper.UserMapper;
+import com.example.demo.service.Impl.*;
+import org.apache.velocity.util.ArrayListWrapper;
 import org.springframework.ui.Model;
 import com.example.demo.domain.User;
-import com.example.demo.service.Impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,19 @@ public class UserController {
     private AddressServiceImpl addressServiceImpl;
     @Autowired
     private OrganizationServiceImpl organizationServiceImpl;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private CartServiceImpl cartServiceImpl;
 
+    @RequestMapping("/insertTest")
+    @ResponseBody
+    public String insertTest(){
+        User u = new User("测试",new Long(12345678),"测试");
+        userMapper.insert(u);
+        return u.getUserId().toString();
+
+    }
 
     /**
      * @Description: 查找所有用户信息
@@ -113,23 +123,32 @@ public class UserController {
                             Model model,
                             HttpSession session){
         User u = userServiceImpl.login(account,password);
+        SingleBookOrderWrapper  singleBookOrderWrapper;
         if (null == u){
             //登录失败，返回登录页面
             model.addAttribute("type","transfer");
             model.addAttribute("errorInfo","用户名或者密码错误");
             return "login";
         }
-        //从Session中获取到书籍订单包装类
-        OrdersWrapper ordersWrapper = (OrdersWrapper) session.getAttribute("tempOrderWrapper");
-//        System.out.println(ordersWrapper);
+        //从Session中获取到单本书籍订单包装类
+        singleBookOrderWrapper = (SingleBookOrderWrapper) session.getAttribute("singleBookOrderWrapper");
         //开始数据处理
-        //按照机构归类获取书籍
-        Map<String,Map<Book,Integer>> resultBookMap = getBooksByOrg(ordersWrapper);
+        List<SingleBookOrderWrapper> list = new ArrayList<>();
+        list.add(singleBookOrderWrapper);
+        //按照机构归类获取书籍,返回给前端一个封装好了的结果集
+        Map<SingleOrgOrderWrapper,List<SingleBookOrderWrapper>> resultBookMap = getBooksByOrg(list);
+        //获取总计
+        Double orderSub = resultBookMap.get(null).get(0).getCurSubTotal();
+        //去除临时放置总计的包装类
+        resultBookMap.remove(null);
         //-------完成书籍获取、封装
         //用户地址获取、封装
-        model.addAttribute("locations",addressServiceImpl.getAllAddressByUser(u.getUserId()));
+        session.setAttribute("locations",addressServiceImpl.getAllAddressByUser(u.getUserId()));
         //返回书籍map
-        model.addAttribute("bookMap",resultBookMap);
+//        model.addAttribute("orderMap",resultBookMap);
+        session.setAttribute("orderMap",resultBookMap);
+        //返回总计
+        model.addAttribute("orderSub",orderSub);
         session.setAttribute("user",u);
         session.setAttribute("userType","user");
         return "/buyConfirm";
@@ -160,29 +179,60 @@ public class UserController {
     @RequestMapping("/buyBookNow")
     public String buyBookNow(Model model,HttpSession session,Long bookId,int booksAmount,int booksDays){
         User u = (User) session.getAttribute("user");
+        session.removeAttribute("orderMap");
+        session.removeAttribute("singleBookOrderWrapper");
         //如果用户没有登录，先跳转到登录界面，然后再进入到订单确认界面
-
+        SingleBookOrderWrapper  singleBookOrderWrapper;
         if(null == u){
-            //将订单信息封装到map中
-            OrdersWrapper ordersWrapper = new OrdersWrapper();
-            ordersWrapper.getBookIdSet().add(bookId);
-            ordersWrapper.getBookAmount().put(bookId,booksAmount);
+            //将订单信息封装到但本书籍订单中中
+            singleBookOrderWrapper = new SingleBookOrderWrapper(bookId,booksAmount,booksDays);
             //将图书订单信息存入Session中
-            session.setAttribute("tempOrderWrapper",ordersWrapper);
+            session.setAttribute("singleBookOrderWrapper",singleBookOrderWrapper);
             model.addAttribute("type","transfer");
             return "login";
         }
-        //从Session中获取到书籍订单包装类
-        OrdersWrapper ordersWrapper = (OrdersWrapper) session.getAttribute("tempOrderWrapper");
+        //从Session中获取到单本书籍订单包装类
+        singleBookOrderWrapper = (SingleBookOrderWrapper) session.getAttribute("singleBookOrderWrapper");
+        //当用户在登录的情况下再次下单时，为了防止出现读取到上一个session值得问题，之前的session被清除
+        if (singleBookOrderWrapper == null){
+            singleBookOrderWrapper = new SingleBookOrderWrapper(bookId,booksAmount,booksDays);
+        }
         //开始数据处理
-        //按照机构归类获取书籍
-        Map<String, Map<Book,Integer>> resultBookMap = getBooksByOrg(ordersWrapper);
+        List<SingleBookOrderWrapper> list = new ArrayList<>();
+        list.add(singleBookOrderWrapper);
+        //按照机构归类获取书籍,返回给前端一个封装好了的结果集
+        Map<SingleOrgOrderWrapper,List<SingleBookOrderWrapper>> resultBookMap = getBooksByOrg(list);
+        //获取总计
+        Double orderSub = resultBookMap.get(null).get(0).getCurSubTotal();
+        //去除临时放置总计的包装类
+        resultBookMap.remove(null);
         //-------完成书籍获取、封装
         //用户地址获取、封装
-        model.addAttribute("locations",addressServiceImpl.getAllAddressByUser(u.getUserId()));
+        session.setAttribute("locations",addressServiceImpl.getAllAddressByUser(u.getUserId()));
         //返回书籍map
-        model.addAttribute("bookMap",resultBookMap);
+//        model.addAttribute("orderMap",resultBookMap);
+        session.setAttribute("orderMap",resultBookMap);
+        //返回总计
+        model.addAttribute("orderSub",orderSub);
         return "/buyConfirm";
+    }
+
+
+    @RequestMapping("/user/goPayCart")
+    @ResponseBody
+    public void userGoPay(HttpSession session,@RequestBody String[] arr){
+        User u =(User) session.getAttribute("user");
+        List<SingleBookOrderWrapper> list = new ArrayList<>();
+        //获取所有的购物车内选中的订单
+        list = cartServiceImpl.getUserCartList(u.getUserId(),arr,list);
+        //将获取到的购物车订单组成SingleBookWrapper
+//        System.out.println("---------------------------------------------------------------------------------------------");
+//        System.out.println(list);
+        Map<SingleOrgOrderWrapper,List<SingleBookOrderWrapper>> resultBookMap = getBooksByOrg(list);
+//        System.out.println(resultBookMap);
+        session.setAttribute("orderMap",resultBookMap);
+        //用户地址获取、封装
+        session.setAttribute("locations",addressServiceImpl.getAllAddressByUser(u.getUserId()));
     }
 
 
@@ -196,31 +246,41 @@ public class UserController {
      * @Author: chenjiajun
      * @Date: 2021/5/11
      */
-    public  Map<String, Map<Book, Integer>> getBooksByOrg(OrdersWrapper ordersWrapper) {
-        //-----开始获取、封装书籍
-        //获取Map
-        Map<SingleOrgOrderWrapper, SingleBookOrderWrapper> tempBookMap = ordersWrapper.getBookAmount();
-        //使用map往model传输<机构,<书籍-数量>>对应信息
-        Map<String,Map<Book,Integer>> resultBookMap = new HashMap<>();
-        //遍历tempBookMapper获取书籍放入bookMap中
-        for (Long bookId: tempBookMap.keySet()) {
-            Book book = bookServiceImpl.getOderBook(bookId);
+    public  Map<SingleOrgOrderWrapper,List<SingleBookOrderWrapper>> getBooksByOrg(List<SingleBookOrderWrapper> list) {
+        Map<SingleOrgOrderWrapper,List<SingleBookOrderWrapper>> resultBookMap = new HashMap<>();
+        Double total = new Double(0);
+        //orgName - SingleOrgOrderWrapper
+        Map<String,SingleOrgOrderWrapper> tempMap = new HashMap<>();
+        //遍历list
+        for (SingleBookOrderWrapper s:list) {
+            //获取书籍
+            Book book = bookServiceImpl.getBook(s.getBookId());
             if (null != book){
-                int bookAmount = tempBookMap.get(bookId);
                 //获取、验证店铺合法性
                 Organization org = organizationServiceImpl.checkLegality(book.getBookOrgId());
                 if (null != org){
-                    //先获取resultBookMap中orgName对应的书籍-数量键值对Map
-                    Map<Book,Integer> bookMountTemp = resultBookMap.getOrDefault(org.getOrgName(),new HashMap<Book,Integer>(){{
-                        put(book,bookAmount);
-                    }});
-                    //将书籍-数量键值对放到获取到的bookMountTemp中
-                    bookMountTemp.put(book,bookAmount);
-                    //将获取到的机构-<书籍-数量>键值对放到resultBookMap中
-                    resultBookMap.put(org.getOrgName(),bookMountTemp);
+                    //进行数据封装
+                    SingleOrgOrderWrapper tempSoo =
+                            tempMap.getOrDefault(org.getOrgName(),
+                                    new SingleOrgOrderWrapper(org.getOrgName(),org.getOrgId(),0.00));
+                    tempSoo.setOrgId(org.getOrgId());
+                    List<SingleBookOrderWrapper> l = resultBookMap.getOrDefault(tempSoo,new ArrayList<SingleBookOrderWrapper>());
+                    //更新单本书籍订单信息
+                    s.preValue(book);
+                    l.add(s);
+                    //更新total
+                    total += s.getCurSubTotal();
+                    //更新机构订单总计
+                    tempSoo.setOrgCurSubTotal(tempSoo.getOrgCurSubTotal()+s.getCurSubTotal());
+                    resultBookMap.put(tempSoo,l);
                 }
             }
         }
+        //放入总计
+        List<SingleBookOrderWrapper> tempList = new ArrayList<>();
+        SingleBookOrderWrapper singleBookOrderWrapper = new SingleBookOrderWrapper(total);
+        tempList.add(singleBookOrderWrapper);
+        resultBookMap.put(null,tempList);
         return resultBookMap;
     }
 }

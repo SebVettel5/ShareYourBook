@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.CartMapper">
+    <delete id="deleteUSerCart">
+        delete from
+            cart
+        where
+            cart_id = #{cartId}
+           and
+            cart_user_id = #{userId}
+    </delete>
+    <select id="getCartList" resultType="com.example.demo.domain.Cart">
+        select
+            *
+        from
+            cart
+        where
+            cart_user_id = #{userId}
+          and
+            cart_id in (
+                <foreach collection="arr" item="id" open="" close="" separator=",">
+                    #{id}
+                </foreach>
+            )
+    </select>
+</mapper>

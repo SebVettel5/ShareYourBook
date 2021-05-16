@@ -2600,3 +2600,97 @@ span {
 .light_font{
     color: #777777!important;
 }
+.pay_contain{
+    border-top: 2px dotted #b2d1ff;
+    border-bottom: 2px dotted #b2d1ff;
+}
+.pay_contain_text{
+    font-size: x-large;
+    box-sizing:border-box;
+    vertical-align: middle;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-pack:center;
+    -moz-box-pack:center;
+    -webkit-box-align:center;
+    -moz-box-align:center;
+}
+.pay_contain_info{
+    width: 45%;
+    font-size: small;
+}
+.pay_contain_order_no{
+    width: 35%;
+    vertical-align: middle;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-pack:center;
+    -moz-box-pack:center;
+    -webkit-box-align:center;
+    -moz-box-align:center;
+}
+.pay_contain_order_sub{
+    width: 20%;
+    vertical-align: middle;
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-pack:center;
+    -moz-box-pack:center;
+    -webkit-box-align:center;
+    -moz-box-align:center;
+}
+.pay_way_ico{
+    width: 20%;
+    margin-top: -1%;
+    margin-left: -1%;
+}
+.pay_way_font{
+    margin-top: 5px;
+    font-size: large;
+    font-weight: 500;
+}
+.bootom_line{
+    border-bottom: 1px dotted rgb(221, 221, 221);
+}
+.user_order_title{
+    font-family: 'Arvo';
+    font-weight: 700;
+    color: #ed786a;
+    text-shadow: 0.05em 0.075em 0 rgb(0 0 0 / 10%);
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+.user_order_contain{
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: medium;
+    margin-left: 1px;
+    vertical-align: bottom;
+}
+.user_order_book_info{
+    display: block;
+}
+.book_order{
+    border-bottom: 1px dotted   #ccccff;
+}
+.book_order_count{
+
+}
+.light_black_font{
+    font-size: small;
+    color: #777777;
+}
+.collection_input{
+    width: 20%;
+    height: 100%;
+}
+.book_item_option_message{
+font-size: large;
+    margin-top: 2%;
+    color: #ED786A;
+    font-weight: 800;
+    border: 2px #ED786A;
+}
+

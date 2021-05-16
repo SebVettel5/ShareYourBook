@@ -10,12 +10,12 @@ import javax.persistence.Table;
  * @description：TODO
  * @date ：2021/5/6 22:48
  */
-@Table(name = "address")
+@Table(name = "addresss")
 @Data
 public class Address {
     @Id
     private Long addressId;
-    private Long userId;
+    private Long addressUserId;
     private String addressInfo;
     private String addressRecipients;
     private Long addressPhone;

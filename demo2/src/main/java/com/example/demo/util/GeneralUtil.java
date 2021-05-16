@@ -1,7 +1,9 @@
 package com.example.demo.util;
 
+import com.example.demo.ViewObject.OrderPayWrapper;
 import com.example.demo.domain.Administrator;
 import com.example.demo.domain.Book;
+import com.example.demo.domain.BookOrders;
 import com.example.demo.domain.BookUploadRecords;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +46,7 @@ public class GeneralUtil {
         add("onSale");
         add("putOff");
     }};
+    public final static Integer UserDeposits = 100;
 
     public static Book preBookCover(Book book,String localSrc){
         String imgsrc = localSrc+book.getBookCover();
@@ -145,6 +148,18 @@ public class GeneralUtil {
         System.out.println(pageInfo);
         return pageInfo;
     }
+
+    public static List<BookOrders> bookOrderDataPre(List<BookOrders> list){
+        //对查询到的对象进行处理，主要是时间转换和图片的地址拼接
+        for (BookOrders records : list) {
+            //图片地址拼接
+            String imgsrc = "/shareBookPic/bookCover/"+records.getBookOrderBookPic();
+            records.setBookOrderBookPic(imgsrc);
+        }
+        return list;
+    }
+
+
 
     public static String imagUrl(String dataBaseUrl){
         return "/localImg/"+dataBaseUrl;

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head >
+    <meta charset="UTF-8">
+    <title>user|historyOrders</title>
+    <link rel="stylesheet" href="../../static/css/mystyle.css">
+    <link rel="stylesheet" href="../../static/css/table.css">
+    <script src="../../static/js/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="../../static/layer/layer.js"></script>
+</head>
+<body>
+<div>
+    <!--标题-->
+    <div class="user_order_title">历史借阅订单</div>
+    <div class="slice_line"></div>
+    <!--表头-->
+    <div class="full_flex">
+        <div class="order_book_info_title" style="width: 1%"></div>
+        <div class="order_book_info_title" style="width: 10%"></div>
+        <div class="order_book_info_title" style="width: 30%">书籍信息</div>
+        <div class="order_book_info_title" style="width: 30%">结算信息</div>
+        <div class="order_book_info_title" style="width: 15%">邮费</div>
+        <div class="order_book_info_title" style="width: 15%">归还物流</div>
+    </div>
+    <!--遍历内容-->
+    <div th:each="orgOrder:${orderResult.list}">
+        <!--遍历机构-->
+        <div style=" border-bottom: 1px dotted #b2d1ff;">
+            <div class="full_flex">
+                <div class="small_font">图书机构:</div>
+                <div th:text="${orgOrder.orgName}">时代云图</div>
+            </div>
+            <div  class="full_flex">
+                <div style="width: 1%"><input type="checkbox" th:value="${orgOrder.orderNo}" name="orgOrderId"></div>
+                <div class="small_font" style="margin-left: 1%">订单号:</div>
+                <div th:text="${orgOrder.orderNo}" class="light_font">100000000023</div>
+            </div>
+        </div>
+        <!--遍历书籍-->
+        <div class="full_flex book_order light_font" th:each="bookOrder:${orgOrder.bookList}">
+
+            <div style="width: 10%;">
+                <img src="../../static/css/images/iconmonstr-book-20-240.png" th:src="${bookOrder.bookOrderBookPic}">
+            </div>
+            <div style="width: 30%" class="user_order_contain user_order_book_info">
+                <div th:text="'书名：'+${bookOrder.bookOrderBookName}">书名:数据库原理</div>
+                <div th:text="'作者：'+${bookOrder.bookOrderBookAuthor}">作者：王珊</div>
+                <div th:text="'出版社：'+${bookOrder.bookOrderBookPublisher}">出版社:高等教育出版社</div>
+                <div th:text="'版次：'+${bookOrder.bookOrderBookEdition}">版次：第一版第一次</div>
+            </div>
+            <div style="width: 30%" class="user_order_contain"
+                 th:text="${bookOrder.bookOrderBookAmount}+'本*'+${bookOrder.bookOrderBookDays}+'天*'+${bookOrder.bookOrderBookPrice}+'元/天'">
+                1本*2天*0.75元/天
+            </div>
+            <div th:text="${bookOrder.bookOrderPostage}" style="width: 15%" class="user_order_contain">2</div>
+            <div style="font-size: xx-small">
+                <div th:text="'物流公司:'+${bookOrder.bookOrderBackPostName}">物流公司:</div>
+                <div th:text="'物流单号:'+${bookOrder.bookOrderBackPostNo}">物流单号:</div>
+                <div th:text="'发货时间:'+${#dates.format(bookOrder.bookOrderUserBackTime,'yyyy-MM-dd HH:mm:ss')}">发货时间:</div>
+                <div th:if="${bookOrder.bookOrderOrgGetTime}" th:text="'机构收货时间'+${bookOrder.bookOrderOrgGetTime}">机构收货时间</div>
+            </div>
+        </div>
+        <!--合计-->
+        <div class="full_flex flex_left book_order_count">
+            <div>总计(含运费)</div>
+            <div th:text="'￥:'+${orgOrder.subTotal}" style="color: red;font-weight: 800;">18.5</div>
+        </div>
+        <!--收件地址-->
+        <div>
+            <div class="full_flex">
+                <div class="small_font" style="color: #777777;">收件人:</div>
+                <div th:text="${orgOrder.address.addressRecipients}" class="light_black_font">陈家俊</div>
+            </div>
+            <div class="full_flex">
+                <div class="small_font" style="color: #777777;">地址信息:</div>
+                <div th:text="${orgOrder.address.addressInfo}+'  '+${orgOrder.address.addressPhone}" class="light_black_font">湖南省株洲市</div>
+            </div>
+        </div>
+        <div class="slice_line"></div>
+    </div>
+    <div>
+        <button class="button is-warning" onclick="deleteOrders()">删除订单</button>
+    </div>
+    <ul class="pagination pull-right no-margin">
+        <!-- 首页 -->
+        <li>
+            <a th:href="'/user/getHistoryOrders?pageNum=1'">首页</a>
+        </li>
+        <!-- 上一页 -->
+        <li th:if="${orderResult.hasPreviousPage}">
+            <a th:href="'/user/getHistoryOrders?pageNum=' + ${orderResult.prePage}" th:text="上一页"></a>
+        </li>
+        <!-- 中间页 -->
+        <li th:each="pages:${orderResult.navigatepageNums}">
+            <a th:href="'/user/getHistoryOrders?pageNum=' + ${pages}" th:text="${pages}" ></a>
+            <!--                            <a th:href="'/org/checkinglist?pageNum=' + ${pages}" th:text="${pages}" th:if="${pages eq pageNum}" th:style="'font-weight:bold;background: #6faed9;'"></a>-->
+        </li>
+        <!-- 下一页 -->
+        <li th:if="${orderResult.hasNextPage}">
+            <a th:href="'/user/getHistoryOrders?pageNum=' + ${orderResult.nextPage}" th:text="下一页"></a>
+        </li>
+        <!-- 尾页 -->
+        <li>
+            <a th:href="'/user/getHistoryOrders?pageNum=' + ${orderResult.size}">尾页</a>
+        </li>
+    </ul>
+</div>
+<script>
+    function deleteOrders() {
+        var orderIds = [];
+        //接受所有选择的订单的id
+        $("input[name='orgOrderId']:checked").each(function (i) {
+            orderIds.push($(this).val());
+        });
+        //没有任何被选中则给出弹窗提醒
+        if (orderIds.length == 0){
+            layer.msg("未选中订单！");
+            return;
+        }else {
+            layer.confirm('确定要取消这些订单吗？',{
+                btn:['确认','取消']
+            },function () {
+                processingData(orderIds, '/user/deleteOrders');
+            },function () {
+
+            })
+        }
+    }
+    
+    function processingData(data,url) {
+        $.ajax({
+            type:'post',
+            url:url,
+            contentType:"application/json",
+            data:JSON.stringify(data),
+            success:function (message) {
+                layer.msg(message,{
+                    time:3000,
+                    btn:['确认']
+                },function () {
+                    location.reload(true);
+                })
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

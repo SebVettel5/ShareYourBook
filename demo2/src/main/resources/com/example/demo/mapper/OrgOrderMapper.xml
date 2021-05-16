@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.mapper.OrgOrderMapper">
+    <insert id="insertOne" parameterType="com.example.demo.domain.OrgOrders" keyProperty="orgOrderId" useGeneratedKeys="true">
+        insert into
+            orgorders(org_order_org_id,org_order_org_name,org_order_user_id,org_order_user_name,
+                        org_order_create_time,org_order_sub,org_order_status,org_order_address_id)
+            values(#{orgOrderId},#{orgOrderOrgName},#{orgOrderUserId},#{orgOrderUserName},#{orgOrderCreateTime},#{orgOrderSub},#{orgOrderStatus},#{orgOrderAddressId})
+    </insert>
+    <update id="afterPay">
+        update
+            orgorders
+         set
+            org_order_pay_way = #{payWay},
+            org_order_status = #{orderStatus}
+         where
+            org_order_id = #{orderNo}
+    </update>
+    <select id="getAllByIdAndStatus" resultType="com.example.demo.domain.OrgOrders">
+        select
+            *
+        from
+            orgorders
+        where
+            org_order_user_id = #{userId}
+           and
+            org_order_status = #{orderStatus}
+           and
+            org_order_data_record_status = #{dataStatus}
+    </select>
+    <update id="deleteOrders" >
+            update
+                orgorders
+             set
+                org_order_data_record_status = false
+             where
+                org_order_user_id = #{userId}
+             and
+                org_order_id in(
+                <foreach collection="l" item="id" open="" close="" separator=",">
+                    #{id}
+                </foreach>
+            )
+    </update>
+    <select id="getOrdersByList" resultType="com.example.demo.domain.OrgOrders">
+            select
+                *
+            from
+                orgorders
+            where
+                org_order_data_record_status = true
+               and
+                org_order_status = #{status}
+               and
+                org_order_user_id = #{userId}
+               and
+                org_order_id in(
+                    <foreach collection="orderIdList" item="id" open="" close="" separator=",">
+                        #{id}
+                    </foreach>
+                )
+    </select>
+    <update id="updateOrdersStatus">
+        update
+            orgorders
+        set
+            org_order_status = #{status}
+        where
+            org_order_user_id = #{userId}
+        and
+            org_order_id in(
+            <foreach collection="l" item="id" open="" close="" separator=",">
+                #{id}
+            </foreach>
+            )
+    </update>
+    <update id="cancelOrders">
+        update
+            orgorders
+        set
+            org_order_status = "已取消"
+        where
+            org_order_user_id = #{userId}
+           and
+           ( org_order_status = "已支付"
+           or
+            org_order_status = "运输中"
+           or
+            org_order_status = "未支付")
+        and
+        org_order_id in(
+        <foreach collection="l" item="id" open="" close="" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+    <select id="getAllOrdersById" resultType="com.example.demo.domain.OrgOrders">
+        select
+            *
+        from
+            orgorders
+        where
+            org_order_user_id = #{userId}
+          and
+            org_order_data_record_status = true
+          and
+            org_order_status = "已完成"
+    </select>
+    <update id="getConfirmOrders">
+        update
+            orgorders
+        set
+            org_order_status = "阅读中",
+            org_order_user_get_time = #{date}
+        where
+            org_order_status = "运输中"
+         and
+            org_order_user_id = #{userId}
+         and
+            org_order_id in(
+            <foreach collection="list" item="id" open="" close="" separator=",">
+                #{id}
+            </foreach>
+            )
+    </update>
+    <update id="updateOrderBookAmount">
+        UPDATE orgorders set org_order_book_order_amounts = (
+            SELECT	count(*)
+            FROM bookorders
+	        WHERE book_order_org_order_id = #{orderNo})
+            WHERE org_order_id = #{orderNo}
+    </update>
+</mapper>

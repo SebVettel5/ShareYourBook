@@ -96,11 +96,9 @@
            and
             book_data_status = 1
     </select>
-    <select id="getBookById" resultMap="bookDataPre">
+    <select id="getBookById" resultType="com.example.demo.domain.Book">
         select
-            book_id,book_cover,book_edition,book_publisher,book_language,
-            book_author,book_name,book_status,book_price,book_amount,
-            book_description
+            *
         from
             books
         where

@@ -76,7 +76,6 @@
                                         <div th:text="'库存:'+${book.bookAmount}" style="font-size: xx-small;color: black;margin-left: 1%">库存:1</div>
                                     </div>
                                     <div class="book_info_col">
-                                        <input name="bookId" style="display: none" th:value="${book.bookId}"/>
                                         <div class="store_book_info_title">借阅天数：</div>
                                         <div>
                                             <input type="number" value="1" name="booksDays" class="store_num_input" oninput="if (value<1)value=1;if (value>999)value=999" >
@@ -88,6 +87,7 @@
                                     <button id="buyNow" class="button is-warning is-light" style="width: 30%" type="submit" onclick="buyNow()">立即购买</button>
                                     <button id="joinCart" class="button is-danger is-light" style="width: 30%" type="submit" onclick="putInCart()">加入购物车</button>
                                 </div>
+                                <div th:if="${optionMessage}" th:text="${optionMessage}" class="book_item_option_message">操作结果</div>
                             </div>
 						</div>
 					</div>

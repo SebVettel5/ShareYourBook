@@ -2,6 +2,7 @@ package com.example.demo.mapper;
 
 import com.example.demo.domain.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.common.BaseMapper;
 
 /**
@@ -10,6 +11,7 @@ import tk.mybatis.mapper.common.BaseMapper;
  * @date ：2021/2/1 17:00
  */
 @Mapper
+@Component
 public interface UserMapper extends BaseMapper<User> {
     /**
     * @Description: 向用户表插入新用户，返回结果

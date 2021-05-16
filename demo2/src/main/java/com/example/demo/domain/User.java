@@ -53,6 +53,12 @@ public class User {
 
     }
 
+    public User(String s1, Long aLong, String s2) {
+        this.setUserNickname(s1);
+        this.setUserPhone(aLong);
+        this.setUserPassword(s2);
+    }
+
     public Long getUserId() {
         return userId;
     }

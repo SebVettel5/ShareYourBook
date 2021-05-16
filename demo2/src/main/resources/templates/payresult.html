@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head th:replace="fragments :: head(~{::title})">
+		<title>sharebook|payresult</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../static/css/main.css" />
+        <link rel="stylesheet" href="../static/css/mystyle.css">
+        <link rel="stylesheet" href="../static/css/table.css">
+        <script src="../static/js/jquery-3.6.0.js"></script>
+	</head>
+	<body class="about is-preload">
+		<div id="page-wrapper">
+			<!-- 页首部分 -->
+				<section id="header" style="background-color: #EBEBEB;">
+					<div class="container">
+						<!-- Logo -->
+							<h1 id="title">夏书|Share Book</h1>
+						<!-- Nav -->
+							<nav id="nav" th:replace="fragments :: nav"></nav>
+					</div>
+				</section>
+			<!-- 主要内容部分 -->
+				<section id="main">
+					<div class="container">
+						<div id="content">
+                            <div class="full_flex" style="display: flex">
+                                <div>
+                                    <img src="../../static/css/images/iconmonstr-book-20-240.png">
+                                </div>
+                                <div>
+                                    <div th:text="${payInfo}" style="font-size: xx-large;margin-bottom: 10px;color: red;font-weight: 800">支付成功！</div>
+                                    <div style="font-size: x-large;">即将跳转到个人中心</div>
+                                </div>
+                            </div>
+                            
+							
+						</div>
+					</div>
+				</section>
+			<!-- 页脚部分 -->
+				<section id="footer" th:replace="fragments :: foot"></section>
+		</div>
+        <div th:replace="fragments :: script"></div>
+
+        <script>
+            function JumpToURL(){
+                location='../user/personalpage';
+            }
+            setTimeout('JumpToURL()',2000);
+        </script>
+    </body>
+</html>

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.Deposits;
 import org.springframework.ui.Model;
 import com.example.demo.domain.User;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,4 +34,5 @@ public interface UserService {
     String UserLogin(String phone, String password, Model model, RedirectAttributes redirectAttributes, HttpSession session);
 
     User login(String account, String password);
+
 }

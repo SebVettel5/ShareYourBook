@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>modification</title>
+    <link rel="stylesheet" href="../../static/layer/layui.css">
+</head>
+<body>
+<div class="layui-input-block layui-form" id="modifyClass"
+     lay-filter="updateClass" style="margin-top: 30px">
+    <div th:if="${optionMessage}" th:text="${optionMessage}" style="text-align: center;color: #ffffff;margin-bottom: 1%;width: 25%;font-size: x-large;background-color: #fcd4dc" >qqq</div>
+    <form id="modificationForm" class="layui-form" action="/user/bookBackPost" method="post" enctype="multipart/form-data"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+        <div style="display: none">
+            <input th:value="${bookOrderId}" type="text" name="bookOrderId">
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">归还地址:</label>
+            <div class="layui-input-inline" th:text="${org.orgAddressInfo}"></div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收件人:</label>
+            <div class="layui-input-inline" th:text="${org.orgAddressRec}"></div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号:</label>
+            <div class="layui-input-inline" th:text="${org.orgAddressPhone}"></div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">物流名称:</label>
+            <div class="layui-input-inline">
+                <input  type="text" name="postName" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">物流单号:</label>
+            <div class="layui-input-inline">
+                <input  type="text" name="postNo" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <button type="submit" id="sub" style="display: none">提交</button>
+    </form>
+</div>
+</body>
+</html>

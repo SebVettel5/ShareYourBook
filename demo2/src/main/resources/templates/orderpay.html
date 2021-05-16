@@ -1,0 +1,125 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+	<head >
+		<title>sharebook|orderPay</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../static/css/main.css" />
+        <link rel="stylesheet" href="../static/css/mystyle.css">
+        <script src="../static/js/jquery-3.6.0.js"></script>
+	</head>
+	<body class="about is-preload">
+		<div id="page-wrapper">
+			<!-- 页首部分 -->
+				<section id="header" style="background-color: #EBEBEB;">
+					<div class="container">
+						<!-- Logo -->
+							<h1 id="title">支付</h1>
+						<!-- Nav -->
+							<nav id="nav" th:replace="fragments :: nav"></nav>
+					</div>
+				</section>
+			<!-- 主要内容部分 -->
+				<section id="main">
+					<div class="container">
+						<div id="content">
+                            <div>订单支付</div>
+                            <div class="slice_line"></div>
+                            <div class="order_check_area_title">押金认证</div>
+                            <!--显示用户押金缴纳情况-->
+                            <div>
+                                <!--已经足额缴纳-->
+                                <div class="full_flex pay_contain" th:if="${session.deposit} eq true">
+                                    <div style="width: 10%">
+                                        <img src="../static/css/images/iconmonstr-check-mark-14-240.png" style="width: 100%">
+                                    </div>
+                                    <div  class="pay_contain_text">您已完成押金缴纳！</div>
+                                </div>
+                                <!--未足额缴纳-->
+                                <div class="full_flex pay_contain" th:if="${session.deposit} eq false">
+                                    <div style="width: 10%">
+                                        <img src="../static/css/images/iconmonstr-warning-2-240.png" style="width: 100%">
+                                    </div>
+                                    <div class="pay_contain_text">您未完成押金缴纳！共享图书借阅前需要缴纳一定额度的押金，以保证服务质量！具体要求请查看<a>用户协议。</a></div>
+                                </div>
+                            </div>
+                            <div class="slice_line"></div>
+                            <div class="order_check_area_title">订单结算</div>
+                            <div class="full_flex">
+                                <div class="order_book_info_title" style="width: 45%">说明</div>
+                                <div class="order_book_info_title" style="width: 35%">订单号</div>
+                                <div class="order_book_info_title" style="width: 20%">金额</div>
+                            </div>
+                            <!--存放每一条订单的信息-->
+                            <div th:each="orderPay :${session.payResult}">
+                                <div class="full_flex bootom_line">
+                                    <div class="store_book_contain pay_contain_info ">
+                                        <div th:text="${orderPay.orgName}">时代云图</div>
+                                        <div th:each="s:${orderPay.bookAmountDaysInfo}">
+                                            <div th:text="${s}" >数据库基础</div>
+                                        </div>
+                                    </div>
+                                    <div class="store_book_contain pay_contain_order_no ">
+                                        <div th:text="${orderPay.orderNo} eq 0 ? '-' :${orderPay.orderNo} " >11111</div>
+                                    </div>
+                                    <div class="store_book_contain pay_contain_order_sub ">
+                                        <div th:text="'￥:'+${orderPay.subTotal}" name="itemTotal" >￥：1.00</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="full_flex flex_left plus_info" >
+                                <div class="small_font">合计费用(含运费):</div>
+                                <div class="small_pay_count" id="orderTotal" th:text="'￥:'+${session.totalSub}">￥:1.25</div>
+                            </div>
+                            <div class="slice_line"></div>
+                            <div class="order_check_area_title">支付方式选择</div>
+                            <!--支付方式-->
+                            <div class="full_flex">
+                                <div class="full_flex pay_way_contain" style="width: 30%" id="aliPay" onclick="changePayWay('aliPay')">
+                                        <img src="../static/css/images/g11.png" class="pay_way_ico">
+                                        <div class="pay_way_font">支付宝</div>
+                                </div>
+                                <div class="full_flex pay_way_contain" style="width: 30%" id="weChatPay"  onclick="changePayWay('weChatPay')">
+                                    <img src="../static/css/images/g9.png" class="pay_way_ico">
+                                    <div class="pay_way_font" >微信支付</div>
+                                </div>
+                                <div class="full_flex pay_way_contain" style="width: 30%" id="bankUnitPay"  onclick="changePayWay('bankUnitPay')">
+                                    <img src="../static/css/images/g10.ico" class="pay_way_ico">
+                                    <div class="pay_way_font">银联支付</div>
+                                </div>
+                            </div>
+                            <div class="slice_line"></div>
+                            <form action="/order/pay" method="post">
+                                <input name="payWay" id="payWay" value="" required="required" style="display: none">
+                                    <button class="button is-danger is-light" id="subBtn"  type="submit">确认支付</button>
+                            </form>
+
+						</div>
+					</div>
+				</section>
+			<!-- 页脚部分 -->
+				<section id="footer" th:replace="fragments :: foot"></section>
+		</div>
+        <div th:replace="fragments :: script"></div>
+        <script>
+            window.onload=function(){
+                //未选择地址时按钮设置不可用
+                $("#subBtn").attr("disabled","true");
+            }
+
+            var latsPayWay = "";
+            function changePayWay(curPayWay) {
+                if (latsPayWay != ""){
+                    $("#"+latsPayWay).css({"border":"none"})
+                }
+                //显示选中的边框
+                $("#"+curPayWay).css({"border":"1px solid #ff0036"});
+                latsPayWay = curPayWay;
+                $("#payWay").val(curPayWay);
+                $("#subBtn").removeAttr("disabled");
+            }
+        </script>
+	</body>
+
+</html>

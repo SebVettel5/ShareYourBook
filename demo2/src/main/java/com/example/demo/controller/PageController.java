@@ -88,9 +88,9 @@ public class PageController {
         return "fragments";
     }
 
-    @RequestMapping("/personalpage")
+    @RequestMapping("/user/personalpage")
     public String PersonalPage(){
-        return "personalpage";
+        return "user/personalpage";
     }
 
     @RequestMapping("/tabletest")
@@ -113,4 +113,13 @@ public class PageController {
         return "org/allrecords";
     }
 
+    @RequestMapping("/orderPay")
+    public String orderPay(){
+        return "orderpay";
+    }
+
+    @RequestMapping("/buyConfirm")
+    public String buyConfirm(){
+        return "buyConfirm";
+    }
 }

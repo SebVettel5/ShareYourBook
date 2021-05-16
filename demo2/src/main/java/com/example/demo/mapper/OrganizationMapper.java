@@ -3,10 +3,12 @@ package com.example.demo.mapper;
 
 import com.example.demo.domain.Organization;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.common.BaseMapper;
 
 
 @Mapper
+@Component
 public interface OrganizationMapper extends BaseMapper<Organization> {
     /**
     * @Description: 组织用户登录方法
